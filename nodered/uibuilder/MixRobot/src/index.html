@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Mix Robot</title>
+    <meta name="description" content="Node-RED UI Builder - http-vue-loader/VueJS Example">
+
+    <link rel="icon" href="./images/node-blue.ico">
+
+    <link type="text/css" rel="stylesheet" href="../uibuilder/vendor/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="../uibuilder/vendor/bootstrap-vue/dist/bootstrap-vue.css" />
+    <script defer src="../uibuilder/uibuilder.iife.min.js"></script>
+    <script defer src="./index.js"></script>
+
+    <link rel="stylesheet" href="./index.css" media="all">
+</head><body>
+    <div id="app">
+        <!-- route outlet -->
+        <!-- component matched by the route will render here -->
+         <div class="d-flex">
+          <sidebar></sidebar>
+          <div class="ml-3">
+            <navbar class="mb-3 ml-2"></navbar>
+
+            <router-view></router-view>
+          </div>
+         </div>
+      </div>
+
+    <!-- Use vue.min.js for production use -->
+    <script src="../uibuilder/vendor/vue/dist/vue.js"></script>
+    <script src="../uibuilder/vendor/bootstrap-vue/dist/bootstrap-vue.js"></script>
+    <script src="../uibuilder/vendor/chart.js/dist/chart.min.js"></script>
+    
+
+    <script src="../uibuilder/vendor/http-vue-loader/src/httpVueLoader.js"></script> 
+    <script src="../uibuilder/vendor/vue-router/dist/vue-router.js"></script> 
+
+
+</body></html>

@@ -1,0 +1,32 @@
+version: '3'
+services:
+  nodered:
+    build: ./nodered
+    container_name: mynodered
+    ports:
+      - "1880:1880"
+    volumes:
+      - nodered_nodered_data:/data
+    environment:
+      - TZ=Asia/Bangkok
+    restart: unless-stopped
+    networks:
+      - nodered_network
+    depends_on:
+      - mongodb
+
+  mongodb:
+    build:
+      context: ./mongodb
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - nodered_network
+
+volumes:
+  nodered_nodered_data:
+
+networks:
+  nodered_network:
+    driver: bridge

@@ -1,0 +1,3203 @@
+[
+    {
+        "id": "5e7797c88fcdaabc",
+        "type": "tab",
+        "label": "Mix Robot (Control)",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1b83ead6bd1a0820",
+        "type": "modbus-server",
+        "z": "5e7797c88fcdaabc",
+        "name": "",
+        "logEnabled": false,
+        "hostname": "192.168.1.15",
+        "serverPort": "502",
+        "responseDelay": 100,
+        "delayUnit": "ms",
+        "coilsBufferSize": "500",
+        "holdingBufferSize": "500",
+        "inputBufferSize": "500",
+        "discreteBufferSize": "500",
+        "showErrors": false,
+        "showStatusActivities": false,
+        "x": 360,
+        "y": 220,
+        "wires": [
+            [],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "f51fa34df0729add",
+        "type": "link in",
+        "z": "5e7797c88fcdaabc",
+        "name": "PickUP",
+        "links": [
+            "f19033e2ea2b6c89",
+            "36ca127612ec8115"
+        ],
+        "x": 535,
+        "y": 200,
+        "wires": [
+            [
+                "2d327a9fa2ac4001"
+            ]
+        ]
+    },
+    {
+        "id": "2d327a9fa2ac4001",
+        "type": "function",
+        "z": "5e7797c88fcdaabc",
+        "name": "Trigger Robot",
+        "func": "const pickupStatus = global.get(\"pickUp\")\nconst product = global.get(\"ProductType\")\nif(pickupStatus){\n    msg.payload = product;\n    return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 200,
+        "wires": [
+            [
+                "e86b643b0f7cfc71",
+                "e99454a836d1b410"
+            ]
+        ]
+    },
+    {
+        "id": "e86b643b0f7cfc71",
+        "type": "debug",
+        "z": "5e7797c88fcdaabc",
+        "name": "debug 278",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "e99454a836d1b410",
+        "type": "modbus-write",
+        "z": "5e7797c88fcdaabc",
+        "name": "Product ID",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "1",
+        "dataType": "HoldingRegister",
+        "adr": "1",
+        "quantity": "1",
+        "server": "0e9388b6db9ba5f9",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 830,
+        "y": 200,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "2664e2b793e987cc",
+        "type": "modbus-read",
+        "z": "5e7797c88fcdaabc",
+        "name": "Robot Done",
+        "topic": "",
+        "showStatusActivities": false,
+        "logIOActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "1",
+        "dataType": "HoldingRegister",
+        "adr": "9",
+        "quantity": "1",
+        "rate": "1",
+        "rateUnit": "s",
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "server": "0e9388b6db9ba5f9",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "x": 670,
+        "y": 280,
+        "wires": [
+            [
+                "e764c1df9824022d"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "e764c1df9824022d",
+        "type": "function",
+        "z": "5e7797c88fcdaabc",
+        "name": "function 10",
+        "func": "const robotDone = msg.payload[0]\nif(robotDone === 1){\n    global.set(\"robotPickup\", true);\n}\nelse{\n    global.set(\"robotPickup\", false);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c3e83d37d85454eb",
+        "type": "tab",
+        "label": "Mix Robot (Web)",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6b03782d444b1604",
+        "type": "uibuilder",
+        "z": "c3e83d37d85454eb",
+        "name": "",
+        "topic": "",
+        "url": "MixRobot",
+        "okToGo": true,
+        "fwdInMessages": false,
+        "allowScripts": false,
+        "allowStyles": false,
+        "copyIndex": true,
+        "templateFolder": "vue2-bootstrap",
+        "extTemplate": "",
+        "showfolder": false,
+        "reload": false,
+        "sourceFolder": "src",
+        "deployedVersion": "7.0.4",
+        "showMsgUib": false,
+        "title": "",
+        "descr": "",
+        "x": 690,
+        "y": 200,
+        "wires": [
+            [
+                "7653506ad194aec2",
+                "66c679e0000dd09a",
+                "2f5aa24babc66708"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "2634a6cc0f95dcdc",
+        "type": "debug",
+        "z": "c3e83d37d85454eb",
+        "name": "debug 26",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7653506ad194aec2",
+        "type": "debug",
+        "z": "c3e83d37d85454eb",
+        "name": "debug 33",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "66c679e0000dd09a",
+        "type": "rbe",
+        "z": "c3e83d37d85454eb",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 850,
+        "y": 180,
+        "wires": [
+            [
+                "7ae21192906bb5bb"
+            ]
+        ]
+    },
+    {
+        "id": "d4a8c424fc667eb3",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Add Queue",
+        "func": "// initial function\nmsg.collection = \"BufferActiveQueue\"; // ตั้งค่าชื่อคอลเลกชัน\n\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n\n// รับข้อมูลที่ดึงมา\nlet items = msg.payload;\n\n// ตรวจสอบว่ามีข้อมูลหรือไม่\nif (items && items.length > 0) {\n    \n    // เพิ่ม Queue ให้กับรายการที่เหลือ\n    for (let i = 0; i < items.length; i++) {\n        items[i].updateTime = toThaiTime(new Date()); // อัปเดตเวลาให้กับรายการที่เหลือ\n\n        // ถ้า queue มีอยู่แล้วให้ใช้ค่าเดิม ถ้าไม่มีกำหนด queue ใหม่เป็น i+1\n        items[i].queue = items[i].queue || (i + 1);\n\n        // ตั้งค่า operation เป็น update\n        msg.operation = \"updateOne\";\n\n        // กำหนด query เพื่อเลือกเอกสารที่จะอัปเดต\n        const query = { _id: items[i]._id };\n\n        // กำหนดการอัปเดต\n        const update = {\n            $set: {\n                location: items[i].location,\n                products: items[i].products,\n                status: items[i].status,\n                queue: items[i].queue,\n                name : `Queue ${i+1}`\n            }\n        };\n\n        // ตัวเลือกสำหรับการอัปเดต\n        const options = {\n            upsert: false\n        };\n\n        // ตั้งค่า payload ให้มีค่าเป็น array ของ query, update, และ options\n        msg.payload = [query, update, options];\n        node.send(msg); // ส่งแต่ละเอกสารไปอัปเดตใน Node-RED\n    }\n} else {\n    // หากไม่มีข้อมูล\n    msg.payload = null;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 80,
+        "wires": [
+            [
+                "6311a447d4fcc70b"
+            ]
+        ]
+    },
+    {
+        "id": "2f5aa24babc66708",
+        "type": "link out",
+        "z": "c3e83d37d85454eb",
+        "name": "Basket Receive",
+        "mode": "link",
+        "links": [
+            "fb65b7796e62e274",
+            "72fb0fbef5aae34b",
+            "dfba51cc7445c33f"
+        ],
+        "x": 815,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "f48d02b59375ee82",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Locations",
+        "func": "msg.collection = \"Locations\"\nmsg.operation = \"find\"\nmsg.payload = {};\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 340,
+        "wires": [
+            [
+                "463d16604d3994a1"
+            ]
+        ]
+    },
+    {
+        "id": "f94eec0a97425cae",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Products",
+        "func": "msg.collection = \"Product\"\nmsg.operation = \"find\"\nmsg.payload = {};\nmsg.projection = {\n    \"productID\": -1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 380,
+        "wires": [
+            [
+                "9b021abe78e066a9"
+            ]
+        ]
+    },
+    {
+        "id": "f23b2fdd5f39478b",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Set Data",
+        "func": "// Get the collection type and payload data\nconst collection = msg.collection;\nconst data = msg.payload;\n\n// Check the collection type and store accordingly\nif (collection === \"Locations\") {\n    // Store in flow context for locations\n    flow.set(\"Locations\", data);\n    node.status({ fill: \"green\", shape: \"dot\", text: \"Locations stored\" });\n} else if (collection === \"Product\") {\n    // Store in flow context for products\n    flow.set(\"Product\", data);\n    node.status({ fill: \"blue\", shape: \"dot\", text: \"Products stored\" });\n} else {\n    // If the collection type is unknown, raise an error\n    node.error(\"Unknown collection type\", msg);\n    return null;\n}\n\n// Send a confirmation message with collection type and data stored\nmsg.payload = { collection: collection, data: data };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 360,
+        "wires": [
+            [
+                "52e1ca5ac3686174"
+            ]
+        ]
+    },
+    {
+        "id": "cdd7fe781764c249",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Add Queue Data",
+        "func": "let addQueue = msg.payload.addQueue\n// Retrieve both locations and products from context\nif(addQueue){\n    const locations = flow.get(\"Locations\") || [];\n    const products = flow.get(\"Product\") || [];\n\n    // Combine data into a single payload if needed\n    msg.payload = {\n        locations: locations,\n        products: products\n    };\n    return msg;\n}\nreturn null\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 180,
+        "wires": [
+            [
+                "6b03782d444b1604"
+            ]
+        ]
+    },
+    {
+        "id": "52e1ca5ac3686174",
+        "type": "debug",
+        "z": "c3e83d37d85454eb",
+        "name": "debug 219",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "4c59d6896201c8ab",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "History Queue",
+        "func": "let historyQueue = msg.payload.historyQueue\n// Retrieve both locations and products from context\nif (historyQueue) {\n    const History = flow.get(\"History\") || [];\n\n    // Combine data into a single payload if needed\n    msg.payload = {\n        historyQueue: History,\n    };\n    return msg;\n}\nreturn null\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 140,
+        "wires": [
+            [
+                "6b03782d444b1604"
+            ]
+        ]
+    },
+    {
+        "id": "8a197f075fa45fba",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Histiry Queue",
+        "func": "msg.collection = \"HistoryActiveQueue\"\nmsg.operation = \"find\"\nmsg.payload = {};\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    \"timeStamp\": -1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 420,
+        "wires": [
+            [
+                "796a2f95db05768d"
+            ]
+        ]
+    },
+    {
+        "id": "cad2405e2fd4b8c6",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Set Data",
+        "func": "// Get the collection type and payload data\nconst collection = msg.collection;\nconst data = msg.payload;\n\n// Check the collection type and store accordingly\nif (collection === \"HistoryActiveQueue\") {\n    // Store in flow context for locations\n    flow.set(\"History\", data);\n    node.status({ fill: \"green\", shape: \"dot\", text: \"History stored\" });\n}\nelse {\n    // If the collection type is unknown, raise an error\n    node.error(\"Unknown collection type\", msg);\n    return null;\n}\n\n// Send a confirmation message with collection type and data stored\nmsg.payload = { collection: collection, data: data };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "64d5d4246813a5e0",
+        "type": "debug",
+        "z": "c3e83d37d85454eb",
+        "name": "debug 221",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "c1738cbd0411d465",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "liveQueue",
+        "func": "msg.collection = \"BufferActiveQueue\"\nmsg.operation = \"find\"\nmsg.payload = {\n    \"mode\": \"Active\"\n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    \"timeStamp\": -1,\n    \"location\": 1,\n    \"products\": 1,\n    \"status\": 1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 260,
+        "wires": [
+            [
+                "ae26071a08f5ba18"
+            ]
+        ]
+    },
+    {
+        "id": "82d86246eecab72f",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Set Data",
+        "func": "// Get the collection type and payload data\nconst collection = msg.collection;\nconst data = msg.payload;\n\n// Check the collection type and store accordingly\nif (collection === \"BufferActiveQueue\") {\n    // Store in flow context for locations\n    flow.set(\"liveQueue\", data);\n    node.status({ fill: \"green\", shape: \"dot\", text: \"liveQueue stored\" });\n}\nelse {\n    // If the collection type is unknown, raise an error\n    node.error(\"Unknown collection type\", msg);\n    return null;\n}\n\n// Send a confirmation message with collection type and data stored\nmsg.payload = { collection: collection, data: data };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "72fb0fbef5aae34b",
+        "type": "link in",
+        "z": "c3e83d37d85454eb",
+        "name": "Add Queue",
+        "links": [
+            "2f5aa24babc66708"
+        ],
+        "x": 285,
+        "y": 180,
+        "wires": [
+            [
+                "cdd7fe781764c249",
+                "4c59d6896201c8ab",
+                "87fc5e45b6bdc796"
+            ]
+        ]
+    },
+    {
+        "id": "16ad7bc143e549c8",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Add Queue",
+        "func": "// initial function\nmsg.collection = \"BufferActiveQueue\"; // ตั้งค่าชื่อคอลเลกชัน\n\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n\n// รับข้อมูลที่ดึงมา\nlet items = msg.payload;\n\n// ตรวจสอบว่ามีข้อมูลหรือไม่\nif (items && items.length > 0) {\n    \n    // เพิ่ม Queue ให้กับรายการที่เหลือ\n    for (let i = 0; i < items.length; i++) {\n        items[i].updateTime = toThaiTime(new Date()); // อัปเดตเวลาให้กับรายการที่เหลือ\n\n        // ถ้า queue มีอยู่แล้วให้ใช้ค่าเดิม ถ้าไม่มีกำหนด queue ใหม่เป็น i+1\n        items[i].queue = items[i].queue || (i + 1);\n\n        // ตั้งค่า operation เป็น update\n        msg.operation = \"updateOne\";\n\n        // กำหนด query เพื่อเลือกเอกสารที่จะอัปเดต\n        const query = { _id: items[i]._id };\n\n        // กำหนดการอัปเดต\n        const update = {\n            $set: {\n                location: items[i].location,\n                products: items[i].products,\n                status: items[i].status,\n                queue: items[i].queue,\n                name : `Queue ${i+1}`\n            }\n        };\n\n        // ตัวเลือกสำหรับการอัปเดต\n        const options = {\n            upsert: false\n        };\n\n        // ตั้งค่า payload ให้มีค่าเป็น array ของ query, update, และ options\n        msg.payload = [query, update, options];\n        node.send(msg); // ส่งแต่ละเอกสารไปอัปเดตใน Node-RED\n    }\n} else {\n    // หากไม่มีข้อมูล\n    msg.payload = null;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 320,
+        "wires": [
+            [
+                "cfee5a85aae70dcc"
+            ]
+        ]
+    },
+    {
+        "id": "6225604f29fc65e0",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Update List",
+        "func": "// initial function\nmsg.collection = \"HistoryActiveQueue\"; // ตั้งค่าชื่อคอลเลกชัน\n\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n\n// รับข้อมูลที่ดึงมา\nlet items = msg.payload;\n\n// ตรวจสอบว่ามีข้อมูลหรือไม่\nif (items && items.length > 0) {\n\n    // เพิ่ม Queue ให้กับรายการที่เหลือ\n    for (let i = 0; i < items.length; i++) {\n        items[i].updateTime = toThaiTime(new Date()); // อัปเดตเวลาให้กับรายการที่เหลือ\n\n        // ตั้งค่า operation เป็น update\n        msg.operation = \"updateMany\";\n\n        // กำหนด query เพื่อเลือกเอกสารที่จะอัปเดต\n        const query = { _id: items[i]._id };\n\n        // กำหนดการอัปเดต\n        const update = {\n            $set: {\n                queue: i+1,\n            }\n        };\n\n        // ตัวเลือกสำหรับการอัปเดต\n        const options = {\n            upsert: false\n        };\n\n        // ตั้งค่า payload ให้มีค่าเป็น array ของ query, update, และ options\n        msg.payload = [query, update, options];\n        node.send(msg); // ส่งแต่ละเอกสารไปอัปเดตใน Node-RED\n    }\n} else {\n    // หากไม่มีข้อมูล\n    msg.payload = null;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 480,
+        "wires": [
+            [
+                "04ab0ec7cee25010"
+            ]
+        ]
+    },
+    {
+        "id": "a0e7359b84a0305a",
+        "type": "debug",
+        "z": "c3e83d37d85454eb",
+        "name": "debug 222",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "7f1a3c8cd920b161",
+        "type": "inject",
+        "z": "c3e83d37d85454eb",
+        "name": "Request",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 340,
+        "wires": [
+            [
+                "c1738cbd0411d465",
+                "8a197f075fa45fba",
+                "f94eec0a97425cae",
+                "f48d02b59375ee82",
+                "87fc5e45b6bdc796"
+            ]
+        ]
+    },
+    {
+        "id": "87fc5e45b6bdc796",
+        "type": "function",
+        "z": "c3e83d37d85454eb",
+        "name": "Live Queue",
+        "func": "let liveQueue = flow.get(\"liveQueue\") || [];\n// Retrieve both locations and products from context\n\n    // Combine data into a single payload if needed\n    msg.payload = {\n        liveQueue: liveQueue,\n    };\n    return msg;\n\nreturn null\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 220,
+        "wires": [
+            [
+                "6b03782d444b1604"
+            ]
+        ]
+    },
+    {
+        "id": "7ae21192906bb5bb",
+        "type": "mongodb4",
+        "z": "c3e83d37d85454eb",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "insert",
+        "x": 970,
+        "y": 180,
+        "wires": [
+            [
+                "2634a6cc0f95dcdc"
+            ]
+        ]
+    },
+    {
+        "id": "6311a447d4fcc70b",
+        "type": "mongodb4",
+        "z": "c3e83d37d85454eb",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 840,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "463d16604d3994a1",
+        "type": "mongodb4",
+        "z": "c3e83d37d85454eb",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 610,
+        "y": 340,
+        "wires": [
+            [
+                "f23b2fdd5f39478b"
+            ]
+        ]
+    },
+    {
+        "id": "9b021abe78e066a9",
+        "type": "mongodb4",
+        "z": "c3e83d37d85454eb",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 610,
+        "y": 380,
+        "wires": [
+            [
+                "f23b2fdd5f39478b"
+            ]
+        ]
+    },
+    {
+        "id": "796a2f95db05768d",
+        "type": "mongodb4",
+        "z": "c3e83d37d85454eb",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 610,
+        "y": 420,
+        "wires": [
+            [
+                "cad2405e2fd4b8c6",
+                "6225604f29fc65e0"
+            ]
+        ]
+    },
+    {
+        "id": "ae26071a08f5ba18",
+        "type": "mongodb4",
+        "z": "c3e83d37d85454eb",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 610,
+        "y": 260,
+        "wires": [
+            [
+                "82d86246eecab72f",
+                "16ad7bc143e549c8"
+            ]
+        ]
+    },
+    {
+        "id": "cfee5a85aae70dcc",
+        "type": "mongodb4",
+        "z": "c3e83d37d85454eb",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 940,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "04ab0ec7cee25010",
+        "type": "mongodb4",
+        "z": "c3e83d37d85454eb",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 920,
+        "y": 480,
+        "wires": [
+            [
+                "a0e7359b84a0305a"
+            ]
+        ]
+    },
+    {
+        "id": "1657f1e4f1994e23",
+        "type": "tab",
+        "label": "Mix Robot ((Queue Management))",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bbcec519b519e364",
+        "type": "group",
+        "z": "1657f1e4f1994e23",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "38a945df33a21968",
+            "5afc5a0c956c1572",
+            "3ec720f42eef8af3",
+            "699b6db67a4d1d8c",
+            "fe3a9d314875f883",
+            "f60fd314c4b89ec9",
+            "f55b2778475c1923",
+            "54b7daae67192760",
+            "f19033e2ea2b6c89",
+            "1cff218db583a772",
+            "a99cd3ba5f876514",
+            "a7691b21112f120b",
+            "b87e0fde967ddd75",
+            "f7131bce86cc8047",
+            "c76c5226e6d75f82",
+            "95a4939d4c77a216",
+            "b17b5a718084cf66",
+            "1490dc362abff2d4",
+            "91c6d29ad4b59a8a",
+            "f65d5ff50eca3152",
+            "4b94a2af78366608",
+            "85a5115a44e6220e",
+            "e97c830b56d88339",
+            "f85b6838fb3838ac",
+            "806d757cb7ac8489"
+        ],
+        "x": 34,
+        "y": 419,
+        "w": 1092,
+        "h": 362
+    },
+    {
+        "id": "d1b222d9359759b9",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Find Running",
+        "func": "// Check if msg.payload is not null and contains the finishJob property\nlet finishJob = msg.payload && msg.payload.finishJob;\n\nif (finishJob) {\n    msg.collection = \"ActiveQueue\";\n\n    // กำหนด operation เป็น deleteOne\n    msg.operation = \"deleteOne\";\n\n    // กำหนด filter condition เพื่อค้นหาเอกสารที่จะลบ\n    msg.payload = {\n        \"status\": \"Running\" // เงื่อนไขที่ใช้ในการลบเอกสาร\n    };\n\n    // หากต้องการให้มีข้อมูลเพิ่มเติมสามารถใส่ได้ที่นี่\n    msg.options = {}; // ตัวเลือกเพิ่มเติม เช่น { multi: false } สำหรับการลบหลายเอกสาร (ในกรณีที่ต้องการ)\n\n    // คืนค่า msg กลับ\n    return msg;\n}\n\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 880,
+        "wires": [
+            [
+                "d912b4fe15b4c65a"
+            ]
+        ]
+    },
+    {
+        "id": "5c371070cbf68c79",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "name": "debug 196",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1170,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "9076b2727c8ab7be",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Update Status",
+        "func": "// Check if msg.payload is not null and contains the finishJob property\nlet finishJob = msg.payload && msg.payload.finishJob;\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n\nif (finishJob) {\n    let now = toThaiTime(new Date());\n    // ตั้งค่า collection ที่ต้องการทำงานด้วย\n    msg.collection = \"BufferActiveQueue\";\n\n    // กำหนด operation เป็น updateOne\n    msg.operation = \"updateOne\";\n\n    // กำหนด filter condition เพื่อค้นหาเอกสารที่จะอัปเดต\n    const query = {\n        \"status\": \"Running\"\n    };\n\n    // กำหนดการอัปเดต (update operation)\n    const update = {\n        $set: {\n            \"status\": \"Completed\", // เปลี่ยนสถานะเป็น 'Completed'\n            endTime : now , \n        }\n    };\n\n    // กำหนด options สำหรับการอัปเดต\n    const options = {\n        upsert: false // ไม่ให้ทำการเพิ่มเอกสารใหม่หากไม่พบเอกสารที่ตรงกับ query\n    };\n\n    // กำหนด payload ที่จะส่งไป\n    msg.payload = [query, update, options];\n\n    // คืนค่า msg กลับ\n    return msg;\n}\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 940,
+        "wires": [
+            [
+                "d92dbe40eb6ba75b"
+            ]
+        ]
+    },
+    {
+        "id": "2b8f04133a8214c0",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "name": "debug 197",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1170,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "38a945df33a21968",
+        "type": "inject",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Pick up",
+        "props": [
+            {
+                "p": "payload.pickUp",
+                "v": "true",
+                "vt": "bool"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 540,
+        "wires": [
+            [
+                "1490dc362abff2d4",
+                "5afc5a0c956c1572"
+            ]
+        ]
+    },
+    {
+        "id": "5afc5a0c956c1572",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Find Mode",
+        "func": "let robotPick = global.get(\"pickUp\");\nif (robotPick || msg.payload.pickUp){\n    msg.collection = \"ActiveQueue\"\n    msg.operation = \"find\"\n\n    msg.payload = {\n        \"mode\": \"Active\"\n    };\n\n    // กำหนด projection สำหรับฟิลด์ที่ต้องการ\n    msg.projection = {\n        \"timeStamp\": -1,\n        \"location\": 1,\n        \"products\": 1,\n        \"status\": 1,\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 560,
+        "wires": [
+            [
+                "3ec720f42eef8af3"
+            ]
+        ]
+    },
+    {
+        "id": "699b6db67a4d1d8c",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Convert to modbus",
+        "func": "// รับข้อมูลจาก msg.payload\nlet data = msg.payload;\n\n\n// ดึง productID และ quantity ของแต่ละผลิตภัณฑ์\nlet productList = data.products.map(product => {\n    return {\n        productID: product.productID,\n        quantity: product.quantity\n    };\n});\n\nmsg.payload = productList[0]\nreturn msg\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 560,
+        "wires": [
+            [
+                "e97c830b56d88339",
+                "f19033e2ea2b6c89"
+            ]
+        ]
+    },
+    {
+        "id": "fe3a9d314875f883",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Update Product list",
+        "func": "let robotPick = global.get(\"robotPickup\");\nif (robotPick || msg.payload.finishPick) {\n    msg.collection = \"ActiveQueue\";\n\n    msg.operation = \"updateOne\";\n    const query = {\n        \"status\": \"Running\"\n    };\n    // กำหนด filter condition เพื่อค้นหาเอกสารที่จะอัปเดต\n    const update = {\n        $pop: {\n            \"products\": -1 // ลบองค์ประกอบตัวแรกออกจาก array\n        }\n    }\n\n    const options = {\n        upsert: false\n    };\n\n    msg.payload = [query, update, options];\n\n    return msg;\n}\n\n\n\n\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 620,
+        "wires": [
+            [
+                "f60fd314c4b89ec9"
+            ]
+        ]
+    },
+    {
+        "id": "f55b2778475c1923",
+        "type": "inject",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Finish Pick up",
+        "props": [
+            {
+                "p": "payload.finishPick",
+                "v": "true",
+                "vt": "bool"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 620,
+        "wires": [
+            [
+                "a99cd3ba5f876514",
+                "fe3a9d314875f883"
+            ]
+        ]
+    },
+    {
+        "id": "54b7daae67192760",
+        "type": "comment",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Robot Pickup",
+        "info": "",
+        "x": 190,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "ecc1a79daf741260",
+        "type": "inject",
+        "z": "1657f1e4f1994e23",
+        "name": "Start Job",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "a2915a3e47c377fb"
+            ]
+        ]
+    },
+    {
+        "id": "bafd61b65a73d28b",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Pending",
+        "func": "let checkData = msg.payload[0]\nif (!checkData){\n    msg.collection = \"BufferActiveQueue\"\n    msg.operation = \"find\"\n    msg.payload = {\n        \"status\": \"Pending\"\n    };\n\n    // กำหนด projection สำหรับฟิลด์ที่ต้องการ\n    msg.projection = {\n        \"timeStamp\": -1,\n        \"location\": 1,\n        \"products\": 1,\n        \"status\": 1,\n    };\n\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "ea14912b1a593c17"
+            ]
+        ]
+    },
+    {
+        "id": "2aef405181cf5982",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Add Running",
+        "func": "// initial function\nmsg.collection = \"BufferActiveQueue\"; // ตั้งค่าชื่อคอลเลกชัน\n\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n\n// รับข้อมูลที่ดึงมา\nlet items = msg.payload;\n\n// ตรวจสอบว่ามีข้อมูลหรือไม่\nif (items && items.length > 0) {\n    // เปลี่ยนสถานะของรายการแรกเป็น \"Running\" และเพิ่ม queue ให้ถ้ายังไม่มีค่า\n    items[0].status = \"Running\";\n    items[0].updateTime = toThaiTime(new Date());\n    items[0].queue = items[0].queue || 1; // หาก queue ยังไม่มีค่า ให้กำหนดเป็น 1\n\n    // เพิ่ม Queue ให้กับรายการที่เหลือ\n    for (let i = 0; i < items.length; i++) {\n        items[i].updateTime = toThaiTime(new Date()); // อัปเดตเวลาให้กับรายการที่เหลือ\n\n        // ถ้า queue มีอยู่แล้วให้ใช้ค่าเดิม ถ้าไม่มีกำหนด queue ใหม่เป็น i+1\n        items[i].queue = items[i].queue || (i + 1);\n\n        // ตั้งค่า operation เป็น update\n        msg.operation = \"updateOne\";\n\n        // กำหนด query เพื่อเลือกเอกสารที่จะอัปเดต\n        const query = { _id: items[i]._id };\n\n        // กำหนดการอัปเดต\n        const update = {\n            $set: {\n                startTime: items[i].updateTime, // start Job\n                updateTime: items[i].updateTime,\n                location: items[i].location,\n                products: items[i].products,\n                status: items[i].status,\n                queue: items[i].queue,\n                name: items[i].name ||`Queue ${i+1}`\n            }\n        };\n\n        // ตัวเลือกสำหรับการอัปเดต\n        const options = {\n            upsert: false\n        };\n\n        // ตั้งค่า payload ให้มีค่าเป็น array ของ query, update, และ options\n        msg.payload = [query, update, options];\n        node.send(msg); // ส่งแต่ละเอกสารไปอัปเดตใน Node-RED\n    }\n} else {\n    // หากไม่มีข้อมูล\n    msg.payload = null;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 120,
+        "wires": [
+            [
+                "e1939522c8719a6c"
+            ]
+        ]
+    },
+    {
+        "id": "56fec22ac0f568d2",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Find Running",
+        "func": "msg.collection = \"BufferActiveQueue\"\nmsg.operation = \"find\"\nmsg.payload = {\n    \"status\": \"Running\"\n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    \"timeStamp\": -1,\n    \"updateTime\": 1,\n    \"location\": 1,\n    \"products\": 1,\n    \"status\" : 1,\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 120,
+        "wires": [
+            [
+                "c8c0bd379397d735"
+            ]
+        ]
+    },
+    {
+        "id": "8c806828407f87e0",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Insert ActiveQueue",
+        "func": "msg.collection = \"ActiveQueue\"\nmsg.operation = \"insertOne\"\n\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n// รับข้อมูลที่ดึงมา\nlet items = msg.payload;\nitems.updateTime = toThaiTime(new Date());\nmsg.payload = items\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 120,
+        "wires": [
+            [
+                "60c7d0e88d6c9927"
+            ]
+        ]
+    },
+    {
+        "id": "6ee0788b93fc1678",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "name": "debug 195",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1490,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "a2915a3e47c377fb",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Before Start Job",
+        "func": "msg.collection = \"BufferActiveQueue\"\nmsg.operation = \"find\"\nmsg.payload = {\n    \"mode\": \"Active\",\n    \"status\": \"Running\"\n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    \"timeStamp\": -1,\n    \"location\": 1,\n    \"products\": 1,\n    \"status\": 1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 60,
+        "wires": [
+            [
+                "30822e96b4c42e4c"
+            ]
+        ]
+    },
+    {
+        "id": "ae77ebb9dbd410b5",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "name": "debug 199",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "f951951176374aa1",
+        "type": "link out",
+        "z": "1657f1e4f1994e23",
+        "name": "Location",
+        "mode": "link",
+        "links": [
+            "68e5c7547035693e",
+            "a775d1880eb0ac53",
+            "8b0fd8f00e8798c6"
+        ],
+        "x": 535,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "60c7d0e88d6c9927",
+        "type": "rbe",
+        "z": "1657f1e4f1994e23",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 1220,
+        "y": 120,
+        "wires": [
+            [
+                "ae84669eee6c624e"
+            ]
+        ]
+    },
+    {
+        "id": "a775d1880eb0ac53",
+        "type": "link in",
+        "z": "1657f1e4f1994e23",
+        "name": "Before job",
+        "links": [
+            "f951951176374aa1"
+        ],
+        "x": 65,
+        "y": 120,
+        "wires": [
+            [
+                "bafd61b65a73d28b"
+            ]
+        ]
+    },
+    {
+        "id": "8335b35efe39f27f",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Completed",
+        "func": "// ตั้งค่า collection ที่ต้องการทำงานด้วย\nmsg.collection = \"BufferActiveQueue\";\n\n// กำหนด operation เป็น deleteOne\nmsg.operation = \"find\";\n\n// กำหนด filter condition เพื่อค้นหาเอกสารที่จะลบ\nmsg.payload = {\n    \"status\": \"Completed\", // เงื่อนไขที่ใช้ในการลบเอกสาร\n    mode: \"Active\"\n};\n\n// หากต้องการให้มีข้อมูลเพิ่มเติมสามารถใส่ได้ที่นี่\nmsg.options = {}; // ตัวเลือกเพิ่มเติม เช่น { multi: false } สำหรับการลบหลายเอกสาร (ในกรณีที่ต้องการ)\n\n// คืนค่า msg กลับ\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 180,
+        "wires": [
+            [
+                "8578f361348cf25e"
+            ]
+        ]
+    },
+    {
+        "id": "eeb61edf7c2d5f97",
+        "type": "inject",
+        "z": "1657f1e4f1994e23",
+        "name": "Delete Complete",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "8335b35efe39f27f"
+            ]
+        ]
+    },
+    {
+        "id": "f19033e2ea2b6c89",
+        "type": "link out",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Control Robot",
+        "mode": "link",
+        "links": [
+            "46f2f3be30229cde",
+            "f51fa34df0729add",
+            "5d8d58e7485222f7"
+        ],
+        "x": 895,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "a99cd3ba5f876514",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Product Status",
+        "func": "let robotPick = global.get(\"robotPickup\");\nif (robotPick || msg.payload.finishPick) {\nmsg.collection = \"BufferActiveQueue\"\nmsg.operation = \"find\"\nmsg.payload = {\n    \"mode\": \"Active\",\n    \"status\": \"Running\",\n    \n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    \"timeStamp\": -1,\n    \"location\": 1,\n    \"products\": 1,\n    \"status\": 1,\n};\nglobal.set(\"robotPickup\", false);\nreturn msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 680,
+        "wires": [
+            [
+                "1cff218db583a772"
+            ]
+        ]
+    },
+    {
+        "id": "a7691b21112f120b",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Inactive",
+        "func": "msg.collection = \"BufferActiveQueue\";\nmsg.operation = \"updateOne\";\n\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n\n// รับข้อมูลที่ดึงมา\nlet items = msg.payload;\n\n// ตรวจสอบสถานะของผลิตภัณฑ์ใน array\nif (items && items.products && items.products.length > 0) {\n    for (let i = 0; i < items.products.length; i++) {\n        // หากพบสถานะ \"Pending\"\n        if (items.products[i].status === \"Running\") {\n            // อัปเดตสถานะของสินค้าและเวลา\n            items.products[i].status = \"Inactive\"; // เปลี่ยนสถานะของสินค้าเป็น 'Running'\n            items.updateTime = toThaiTime(new Date()); // อัปเดตเวลา\n\n            // กำหนด query โดยใช้ _id ของรายการ\n            const query = { _id: items._id };\n\n            // กำหนดการอัปเดต\n            const update = {\n                $set: {\n                    updateTime: items.updateTime,\n                    products: items.products, // อัปเดต array ของ products\n                }\n            };\n\n            const options = {\n                upsert: false\n            };\n\n            // ตั้งค่า payload สำหรับการอัปเดต\n            msg.payload = [query, update, options];\n\n            return msg; // ส่งข้อความออกหลังการอัปเดต\n        }\n    }\n}\n\n// หากไม่พบสถานะ \"Pending\"\nmsg.payload = null; // ถ้าไม่พบก็ไม่ทำอะไร\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 680,
+        "wires": [
+            [
+                "b87e0fde967ddd75"
+            ]
+        ]
+    },
+    {
+        "id": "f7131bce86cc8047",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Running",
+        "func": "msg.collection = \"BufferActiveQueue\";\nmsg.operation = \"updateOne\";\n\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n\n// รับข้อมูลที่ดึงมา\nlet items = msg.payload;\n\n// ตรวจสอบสถานะของผลิตภัณฑ์ใน array\nif (items && items.products && items.products.length > 0) {\n    for (let i = 0; i < items.products.length; i++) {\n        // หากพบสถานะ \"Pending\"\n        if (items.products[i].status === \"Pending\") {\n            // อัปเดตสถานะของสินค้าและเวลา\n            items.products[i].status = \"Running\"; // เปลี่ยนสถานะของสินค้าเป็น 'Running'\n            items.updateTime = toThaiTime(new Date()); // อัปเดตเวลา\n\n            // กำหนด query โดยใช้ _id ของรายการ\n            const query = { _id: items._id };\n\n            // กำหนดการอัปเดต\n            const update = {\n                $set: {\n                    updateTime: items.updateTime,\n                    products: items.products, // อัปเดต array ของ products\n                }\n            };\n\n            const options = {\n                upsert: false\n            };\n\n            // ตั้งค่า payload สำหรับการอัปเดต\n            msg.payload = [query, update, options];\n\n            return msg; // ส่งข้อความออกหลังการอัปเดต\n        }\n    }\n}\n\n// หากไม่พบสถานะ \"Pending\"\nmsg.payload = null; // ถ้าไม่พบก็ไม่ทำอะไร\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 500,
+        "wires": [
+            [
+                "91c6d29ad4b59a8a",
+                "c76c5226e6d75f82"
+            ]
+        ]
+    },
+    {
+        "id": "95a4939d4c77a216",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "debug 209",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "1490dc362abff2d4",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Product Status",
+        "func": "let robotPick = global.get(\"pickUp\");\nif (robotPick || msg.payload.pickUp) {\nmsg.collection = \"BufferActiveQueue\"\nmsg.operation = \"find\"\nmsg.payload = {\n    \"mode\": \"Active\",\n    \"status\": \"Running\",\n    \n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    \"timeStamp\": -1,\n    \"location\": 1,\n    \"products\": 1,\n    \"status\": 1,\n};\n\nreturn msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 500,
+        "wires": [
+            [
+                "b17b5a718084cf66"
+            ]
+        ]
+    },
+    {
+        "id": "91c6d29ad4b59a8a",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "debug 211",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "f65d5ff50eca3152",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "Finish Job",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "4b94a2af78366608",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "debug 208",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "85a5115a44e6220e",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "debug 212",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "e97c830b56d88339",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "debug 213",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "166d892b7e9e7089",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Find Mode",
+        "func": "\nmsg.collection = \"BufferActiveQueue\"\n    msg.operation = \"find\"\n\n    msg.payload = {\n        \"mode\": \"Active\",\n        \"status\": \"Running\",\n    };\n\n    // กำหนด projection สำหรับฟิลด์ที่ต้องการ\n    msg.projection = {\n        \"timeStamp\": -1,\n        \"location\": 1,\n        \"products\": 1,\n        \"status\": 1,\n    };\n    return msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 880,
+        "wires": [
+            [
+                "0e4da011f8fdb49d"
+            ]
+        ]
+    },
+    {
+        "id": "5907d981b6b636b4",
+        "type": "inject",
+        "z": "1657f1e4f1994e23",
+        "name": "Finish Job",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 880,
+        "wires": [
+            [
+                "166d892b7e9e7089"
+            ]
+        ]
+    },
+    {
+        "id": "b3234c18f7faa451",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Check Finish Job",
+        "func": "msg.collection = \"BufferActiveQueue\";\nmsg.operation = \"updateOne\";\n\n// ฟังก์ชันเพื่อแปลงเวลาเป็น UTC+7\nfunction toThaiTime(date) {\n    const utcOffset = 7 * 60; // UTC+7\n    const localTime = new Date(date.getTime() + (utcOffset * 60 * 1000));\n    return localTime.toISOString();\n}\n\n// รับข้อมูลที่ดึงมา\nlet items = msg.payload;\n\n// ตรวจสอบสถานะของผลิตภัณฑ์ใน array\nif (items && items.products && items.products.length > 0) {\n    let hasRunningOrPending = false;\n\n    // ตรวจสอบทุกผลิตภัณฑ์ว่ามีสถานะ \"Running\" หรือ \"Pending\" หรือไม่\n    for (let i = 0; i < items.products.length; i++) {\n        if (items.products[i].status === \"Running\" || items.products[i].status === \"Pending\") {\n            hasRunningOrPending = true; // พบสถานะ \"Running\" หรือ \"Pending\"\n            break; // หยุดการตรวจสอบเมื่อพบสถานะนี้\n        }\n    }\n\n    // ถ้าไม่มีสถานะ \"Running\" หรือ \"Pending\" ในผลิตภัณฑ์\n    if (!hasRunningOrPending) {\n        msg.payload.finishJob = true;\n        return msg; // ส่งข้อความออกหลังการอัปเดต\n    }\n}\n\n// หากพบสถานะ \"Running\" หรือ \"Pending\" หรือไม่มีข้อมูล\nmsg.payload = null; // ถ้าไม่ทำการอัปเดต\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 880,
+        "wires": [
+            [
+                "d1b222d9359759b9",
+                "9076b2727c8ab7be",
+                "ccd707121512c3d0"
+            ]
+        ]
+    },
+    {
+        "id": "ccd707121512c3d0",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "name": "debug 214",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "f85b6838fb3838ac",
+        "type": "link in",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "PickUp",
+        "links": [
+            "36ca127612ec8115",
+            "e713943d2eeec64a"
+        ],
+        "x": 245,
+        "y": 580,
+        "wires": [
+            [
+                "5afc5a0c956c1572",
+                "fe3a9d314875f883",
+                "1490dc362abff2d4",
+                "a99cd3ba5f876514"
+            ]
+        ]
+    },
+    {
+        "id": "806d757cb7ac8489",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "name": "debug 215",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "4aa465d35919a3cf",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Check Data not null",
+        "func": "let data = msg.payload;\n\nif (data !== undefined && data !== null && Object.keys(data).length > 0) {\n    msg.payload = [data];\n    return msg;\n} else {\n    // If data is invalid, return null\n    return null;\n}\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 180,
+        "wires": [
+            [
+                "4ab49849e671f7df"
+            ]
+        ]
+    },
+    {
+        "id": "2ee7c2ba98802012",
+        "type": "debug",
+        "z": "1657f1e4f1994e23",
+        "name": "debug 220",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "d7fe2dc4dcfea93e",
+        "type": "function",
+        "z": "1657f1e4f1994e23",
+        "name": "Completed",
+        "func": "// ตั้งค่า collection ที่ต้องการทำงานด้วย\nmsg.collection = \"BufferActiveQueue\";\n\n// กำหนด operation เป็น deleteOne\nmsg.operation = \"deleteMany\"\n// กำหนด filter condition เพื่อค้นหาเอกสารที่จะลบ\nmsg.payload = {\n    \"status\": \"Completed\", // เงื่อนไขที่ใช้ในการลบเอกสาร\n    mode: \"Active\"\n};\n\n// หากต้องการให้มีข้อมูลเพิ่มเติมสามารถใส่ได้ที่นี่\nmsg.options = {}; // ตัวเลือกเพิ่มเติม เช่น { multi: false } สำหรับการลบหลายเอกสาร (ในกรณีที่ต้องการ)\n\n// คืนค่า msg กลับ\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 180,
+        "wires": [
+            [
+                "279e3d56ba30ea60"
+            ]
+        ]
+    },
+    {
+        "id": "d912b4fe15b4c65a",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "delete",
+        "x": 1010,
+        "y": 880,
+        "wires": [
+            [
+                "5c371070cbf68c79"
+            ]
+        ]
+    },
+    {
+        "id": "d92dbe40eb6ba75b",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 1020,
+        "y": 940,
+        "wires": [
+            [
+                "2b8f04133a8214c0"
+            ]
+        ]
+    },
+    {
+        "id": "3ec720f42eef8af3",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "forEach",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 570,
+        "y": 560,
+        "wires": [
+            [
+                "699b6db67a4d1d8c",
+                "806d757cb7ac8489"
+            ]
+        ]
+    },
+    {
+        "id": "f60fd314c4b89ec9",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "update",
+        "x": 570,
+        "y": 620,
+        "wires": [
+            [
+                "4b94a2af78366608"
+            ]
+        ]
+    },
+    {
+        "id": "ea14912b1a593c17",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 320,
+        "y": 120,
+        "wires": [
+            [
+                "2aef405181cf5982"
+            ]
+        ]
+    },
+    {
+        "id": "e1939522c8719a6c",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 610,
+        "y": 120,
+        "wires": [
+            [
+                "56fec22ac0f568d2"
+            ]
+        ]
+    },
+    {
+        "id": "c8c0bd379397d735",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 900,
+        "y": 120,
+        "wires": [
+            [
+                "8c806828407f87e0"
+            ]
+        ]
+    },
+    {
+        "id": "ae84669eee6c624e",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "insert",
+        "x": 1340,
+        "y": 120,
+        "wires": [
+            [
+                "6ee0788b93fc1678"
+            ]
+        ]
+    },
+    {
+        "id": "30822e96b4c42e4c",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 430,
+        "y": 60,
+        "wires": [
+            [
+                "ae77ebb9dbd410b5",
+                "f951951176374aa1"
+            ]
+        ]
+    },
+    {
+        "id": "1cff218db583a772",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "forEach",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 570,
+        "y": 680,
+        "wires": [
+            [
+                "a7691b21112f120b",
+                "85a5115a44e6220e"
+            ]
+        ]
+    },
+    {
+        "id": "b87e0fde967ddd75",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "update",
+        "x": 830,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c76c5226e6d75f82",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "update",
+        "x": 850,
+        "y": 500,
+        "wires": [
+            [
+                "95a4939d4c77a216"
+            ]
+        ]
+    },
+    {
+        "id": "b17b5a718084cf66",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "g": "bbcec519b519e364",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "forEach",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 550,
+        "y": 500,
+        "wires": [
+            [
+                "f7131bce86cc8047"
+            ]
+        ]
+    },
+    {
+        "id": "0e4da011f8fdb49d",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "forEach",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 450,
+        "y": 880,
+        "wires": [
+            [
+                "b3234c18f7faa451"
+            ]
+        ]
+    },
+    {
+        "id": "8578f361348cf25e",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 450,
+        "y": 180,
+        "wires": [
+            [
+                "4aa465d35919a3cf",
+                "2ee7c2ba98802012"
+            ]
+        ]
+    },
+    {
+        "id": "4ab49849e671f7df",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "HistoryActiveQueue",
+        "operation": "insertMany",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "insert",
+        "x": 790,
+        "y": 180,
+        "wires": [
+            [
+                "d7fe2dc4dcfea93e"
+            ]
+        ]
+    },
+    {
+        "id": "279e3d56ba30ea60",
+        "type": "mongodb4",
+        "z": "1657f1e4f1994e23",
+        "clientNode": "d08bf79d38b53708",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "delete",
+        "x": 1070,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a8c7f1756c353e23",
+        "type": "tab",
+        "label": "Mix Robot (AMR)",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5edcd506002b3ef9",
+        "type": "group",
+        "z": "a8c7f1756c353e23",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "4411bbeb9e04f812",
+            "644a15d2e8a71e4f",
+            "4a187431b2bbada0",
+            "1f9c163d03ab7716"
+        ],
+        "x": 134,
+        "y": 959,
+        "w": 632,
+        "h": 202
+    },
+    {
+        "id": "e36b4fb81478e4ca",
+        "type": "group",
+        "z": "a8c7f1756c353e23",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "dc513cbcac781f44",
+            "17b9ca5b69880911",
+            "797becf19b65c173",
+            "7ec82143d28bff88",
+            "6ad8be60d1db34f1",
+            "2f7a7c35f8fea580",
+            "32dbf7b623d80a7a"
+        ],
+        "x": 54,
+        "y": 79,
+        "w": 702,
+        "h": 202
+    },
+    {
+        "id": "5068ee36175c754e",
+        "type": "group",
+        "z": "a8c7f1756c353e23",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "f26fd3b282b020ed",
+            "f06fe0f2db0a31d5",
+            "37b70cd51282a090",
+            "58e047794bc30d21",
+            "c55a33ed9317ea55",
+            "f2e8c1948e1cc9fc",
+            "e5b4bd77aaddd053",
+            "87a7bb47af5cfa33",
+            "bf99f368eab7ad90"
+        ],
+        "x": 54,
+        "y": 299,
+        "w": 872,
+        "h": 182
+    },
+    {
+        "id": "9e16b088d31c281d",
+        "type": "group",
+        "z": "a8c7f1756c353e23",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "733730e71d55e06c",
+            "30c0bbd14a5b6b51",
+            "d09a6d938594692a",
+            "6af61405e0801eb8",
+            "8561412a054f8758",
+            "68e5c7547035693e"
+        ],
+        "x": 954,
+        "y": 299,
+        "w": 552,
+        "h": 182
+    },
+    {
+        "id": "b14e5d6c47be3121",
+        "type": "group",
+        "z": "a8c7f1756c353e23",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "c8ec2e13eca5d251",
+            "3bacf923bc22bde3",
+            "61db4bc83bfdf2be",
+            "08ec12fbcb31867c",
+            "9912fd44187ea6cb",
+            "98ab3958922a6ffb",
+            "e423dc1117d08eae",
+            "fbee511c2e0b66a7",
+            "ba63d7e034f7a86b",
+            "c1c3781f460eacf7",
+            "36ca127612ec8115"
+        ],
+        "x": 54,
+        "y": 499,
+        "w": 632,
+        "h": 322
+    },
+    {
+        "id": "4cf36cd41dcb16dd",
+        "type": "group",
+        "z": "a8c7f1756c353e23",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "81d81ee19cc262bd",
+            "821384c64955be9d",
+            "7b2058e4ba6cabe8",
+            "cd264ee59737163c",
+            "0ed4e4502411fa2d",
+            "cf74779c2bf061af",
+            "fb65b7796e62e274"
+        ],
+        "x": 774,
+        "y": 79,
+        "w": 732,
+        "h": 202
+    },
+    {
+        "id": "dc513cbcac781f44",
+        "type": "http request",
+        "z": "a8c7f1756c353e23",
+        "g": "e36b4fb81478e4ca",
+        "name": "Go to pick-up point",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.68.78/cmd/points_path",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 430,
+        "y": 120,
+        "wires": [
+            [
+                "797becf19b65c173"
+            ]
+        ]
+    },
+    {
+        "id": "17b9ca5b69880911",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "e36b4fb81478e4ca",
+        "name": "Start Job",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"name\" : \"Basket\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "dc513cbcac781f44"
+            ]
+        ]
+    },
+    {
+        "id": "797becf19b65c173",
+        "type": "debug",
+        "z": "a8c7f1756c353e23",
+        "g": "e36b4fb81478e4ca",
+        "name": "debug 184",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "4411bbeb9e04f812",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "5edcd506002b3ef9",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 230,
+        "y": 1000,
+        "wires": [
+            [
+                "644a15d2e8a71e4f"
+            ]
+        ]
+    },
+    {
+        "id": "644a15d2e8a71e4f",
+        "type": "http request",
+        "z": "a8c7f1756c353e23",
+        "g": "5edcd506002b3ef9",
+        "name": "Get status of amr",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.68.56/reeman/base_encode",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 430,
+        "y": 1080,
+        "wires": [
+            [
+                "4a187431b2bbada0",
+                "1f9c163d03ab7716"
+            ]
+        ]
+    },
+    {
+        "id": "4a187431b2bbada0",
+        "type": "function",
+        "z": "a8c7f1756c353e23",
+        "g": "5edcd506002b3ef9",
+        "name": "emer status translate",
+        "func": "var emer = msg.payload.emergencyButton;\nif (emer == 1) {\n    msg.payload.emer = \"OFF\";\n}\nif (emer == 0) {\n    msg.payload.emer = \"ON\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1f9c163d03ab7716",
+        "type": "function",
+        "z": "a8c7f1756c353e23",
+        "g": "5edcd506002b3ef9",
+        "name": "charge status translate",
+        "func": "var charge = msg.payload.chargeFlag;\n\nif (charge == 1){\n    msg.payload.chargeFlag = \"Not charging\";\n}\nif (charge == 2) {\n    msg.payload.chargeFlag = \"Charging with charging pile\";\n}\nif (charge == 3) {\n    msg.payload.chargeFlag = \"Charging with adapter\";\n}\nif (charge == 8) {\n    msg.payload.chargeFlag = \"Connecting to charging pile\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7ec82143d28bff88",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "e36b4fb81478e4ca",
+        "name": "Finish Pickup Basket",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"name\" : \"Product\"}",
+        "payloadType": "json",
+        "x": 190,
+        "y": 160,
+        "wires": [
+            [
+                "dc513cbcac781f44"
+            ]
+        ]
+    },
+    {
+        "id": "6ad8be60d1db34f1",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "e36b4fb81478e4ca",
+        "name": "Dock 1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"name\" : \"Dock1\"}",
+        "payloadType": "json",
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "dc513cbcac781f44"
+            ]
+        ]
+    },
+    {
+        "id": "2f7a7c35f8fea580",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "e36b4fb81478e4ca",
+        "name": "Dock 2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"name\" : \"Dock2\"}",
+        "payloadType": "json",
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "dc513cbcac781f44"
+            ]
+        ]
+    },
+    {
+        "id": "32dbf7b623d80a7a",
+        "type": "comment",
+        "z": "a8c7f1756c353e23",
+        "g": "e36b4fb81478e4ca",
+        "name": "Test Run",
+        "info": "",
+        "x": 660,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "f06fe0f2db0a31d5",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 400,
+        "wires": [
+            [
+                "87a7bb47af5cfa33",
+                "bf99f368eab7ad90"
+            ]
+        ]
+    },
+    {
+        "id": "37b70cd51282a090",
+        "type": "function",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "Nav status",
+        "func": "let goal = msg.payload.goal;\nlet s_vx = flow.get(\"vx\");\nlet s_vth = flow.get(\"vth\");\nlet locationID = 0;\n\nif ((msg.payload.res === 1 || msg.payload.res === 0) && s_vx !== 0 && s_vth !== 0) {\n    msg.payload.status = \"Moving to \" + goal;\n    return msg;  // Send to Output 1\n}\nelse if (msg.payload.res === 1 && s_vx === 0 && s_vth === 0) {\n    msg.payload.status = \"Obstacle Detected\";\n    return msg;  // Send to Output 1\n}\nelse if (msg.payload.res === 3 && s_vx === 0 && s_vth === 0) {\n    msg.payload.status = \"Current position \" + goal;\n    if(goal == \"Basket\"){\n        locationID = 1;\n    }\n    else if (goal == \"pick1\"){\n        locationID = 2;\n    }\n    else if (goal == \"pick2\"){\n        locationID = 3;\n    }\n    else if (goal == \"Dog1\") {\n        locationID = 4;\n    }\n    else if (goal == \"Dog2\") {\n        locationID = 5;\n    }\n    msg.payload.loaction = locationID;\n    flow.set(\"locationID\", locationID)\n    return msg;\n}\nelse if (msg.payload.res === 3 && s_vx !== 0 && s_vth !== 0) {\n    msg.payload.status = \"Manual Moving\";\n    return msg;  // Send to Output 1\n}\nreturn msg\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 400,
+        "wires": [
+            [
+                "c55a33ed9317ea55",
+                "e5b4bd77aaddd053"
+            ]
+        ]
+    },
+    {
+        "id": "58e047794bc30d21",
+        "type": "function",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "speed.vx",
+        "func": "flow.set(\"vx\",msg.payload.vx);\nflow.set(\"vth\", msg.payload.vth);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f26fd3b282b020ed",
+        "type": "debug",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "debug 191",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c55a33ed9317ea55",
+        "type": "debug",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "Send Data ProductID Quantity",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "f2e8c1948e1cc9fc",
+        "type": "comment",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "Status",
+        "info": "",
+        "x": 130,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "c8ec2e13eca5d251",
+        "type": "function",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "Control AMR",
+        "func": "let location = msg.payload.loaction\nlet basketReceived = flow.get(\"basketReceived\");\nlet robotPickup = global.get(\"robotPickup\");\nlet releaseProduct = flow.get(\"releaseProduct\");\nlet pickUp = global.get(\"pickUp\")\nlet dropOff = 0 || flow.get(\"dropOff\")\nif(location !== 0 ){\n    if(location == 1 && basketReceived){\n        if(dropOff !== 0){\n            msg.payload = { \"name\": \"pick1\" };\n            flow.set(\"basketReceived\", false);\n            global.set(\"pickUp\", false)\n            global.set(\"ProductType\",0);\n            return msg\n        }\n    }\n    else if (location == 2 ){\n        if (!pickUp){\n            global.set(\"pickUp\",true)\n            global.set(\"ProductType\",2);\n            return msg\n        }\n        else if (robotPickup){\n            msg.payload = { \"name\": \"pick2\" };\n            global.set(\"pickUp\", false)\n            return msg\n        }\n    }\n    else if (location == 3 ){\n        if (!pickUp){\n            global.set(\"pickUp\",true)\n            global.set(\"ProductType\",4);\n            return msg\n        }\n        else if (robotPickup){\n            switch (dropOff) {\n                case 1:\n                case 2:\n                case 3:\n                case 4:\n                case 5:\n                case 6:\n                case 7:\n                case 8:\n                case 9:\n                case 10:\n                    msg.payload = { \"name\": \"Dog\" + dropOff };\n                    global.set(\"pickUp\", false)\n                    return msg;\n                default:\n                    return null;\n            }\n        }\n \n    }\n    else if ((location == 4 || location == 5) && releaseProduct){\n            msg.payload = { \"name\": \"Basket\" };\n            flow.set(\"releaseProduct\", false);\n            global.set(\"pickUp\", false)\n            return msg;\n\n    }\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 230,
+        "y": 600,
+        "wires": [
+            [
+                "08ec12fbcb31867c",
+                "36ca127612ec8115",
+                "c1c3781f460eacf7"
+            ]
+        ]
+    },
+    {
+        "id": "e5b4bd77aaddd053",
+        "type": "link out",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "3bacf923bc22bde3"
+        ],
+        "x": 645,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "3bacf923bc22bde3",
+        "type": "link in",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "link in 3",
+        "links": [
+            "e5b4bd77aaddd053"
+        ],
+        "x": 105,
+        "y": 600,
+        "wires": [
+            [
+                "c8ec2e13eca5d251"
+            ]
+        ]
+    },
+    {
+        "id": "61db4bc83bfdf2be",
+        "type": "debug",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "debug 192",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "08ec12fbcb31867c",
+        "type": "debug",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "debug 193",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "733730e71d55e06c",
+        "type": "function",
+        "z": "a8c7f1756c353e23",
+        "g": "9e16b088d31c281d",
+        "name": "Select Dock",
+        "func": "let dock = 0;\n\n// ตรวจสอบว่า msg.payload และ msg.payload[0] ไม่เป็น undefined ก่อน\nif (msg.payload && msg.payload[0] && msg.payload[0].location !== undefined) {\n    let location = msg.payload[0].location;\n\n    if (location.startsWith(\"Dock \")) {\n        let dockNumber = parseInt(location.split(\" \")[1]);\n        if (dockNumber >= 1 && dockNumber <= 10) {\n            dock = dockNumber;\n        }\n    }\n\n    flow.set(\"dropOff\", dock);\n    msg.payload = flow.get(\"dropOff\");\n    return msg;\n} else {\n    // ส่งข้อความแจ้งว่า location ไม่มีข้อมูล\n    msg.payload = \"Location data is missing or undefined\";\n    return null;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1230,
+        "y": 360,
+        "wires": [
+            [
+                "6af61405e0801eb8"
+            ]
+        ]
+    },
+    {
+        "id": "30c0bbd14a5b6b51",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "9e16b088d31c281d",
+        "name": "Dock 1",
+        "props": [
+            {
+                "p": "msg.payload[0].location",
+                "v": "Dog1",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 1050,
+        "y": 340,
+        "wires": [
+            [
+                "733730e71d55e06c"
+            ]
+        ]
+    },
+    {
+        "id": "d09a6d938594692a",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "9e16b088d31c281d",
+        "name": "Dock 2",
+        "props": [
+            {
+                "p": "msg.payload[0].location",
+                "v": "Dog2",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 1050,
+        "y": 380,
+        "wires": [
+            [
+                "733730e71d55e06c"
+            ]
+        ]
+    },
+    {
+        "id": "6af61405e0801eb8",
+        "type": "debug",
+        "z": "a8c7f1756c353e23",
+        "g": "9e16b088d31c281d",
+        "name": "debug 194",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1390,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8561412a054f8758",
+        "type": "comment",
+        "z": "a8c7f1756c353e23",
+        "g": "9e16b088d31c281d",
+        "name": "Select Dock",
+        "info": "",
+        "x": 1390,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "9912fd44187ea6cb",
+        "type": "comment",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "Control AMR",
+        "info": "",
+        "x": 150,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "81d81ee19cc262bd",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "4cf36cd41dcb16dd",
+        "name": "basketReceived",
+        "props": [
+            {
+                "p": "payload.basketReceived",
+                "v": "true",
+                "vt": "bool"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 900,
+        "y": 120,
+        "wires": [
+            [
+                "cd264ee59737163c"
+            ]
+        ]
+    },
+    {
+        "id": "821384c64955be9d",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "4cf36cd41dcb16dd",
+        "name": "robotPickup",
+        "props": [
+            {
+                "p": "payload.robotPickup",
+                "v": "true",
+                "vt": "bool"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 890,
+        "y": 160,
+        "wires": [
+            [
+                "cd264ee59737163c"
+            ]
+        ]
+    },
+    {
+        "id": "7b2058e4ba6cabe8",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "4cf36cd41dcb16dd",
+        "name": "releaseProduct",
+        "props": [
+            {
+                "p": "payload.releaseProduct",
+                "v": "true",
+                "vt": "bool"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 900,
+        "y": 200,
+        "wires": [
+            [
+                "cd264ee59737163c"
+            ]
+        ]
+    },
+    {
+        "id": "cd264ee59737163c",
+        "type": "function",
+        "z": "a8c7f1756c353e23",
+        "g": "4cf36cd41dcb16dd",
+        "name": "status AMR",
+        "func": "\nlet basketReceived = msg.payload.basketReceived;\nlet robotPickup = msg.payload.robotPickup;\nlet releaseProduct = msg.payload.releaseProduct;\n\nflow.set(\"basketReceived\", basketReceived);\nglobal.set(\"robotPickup\", robotPickup);\nflow.set(\"releaseProduct\", releaseProduct);\n\nreturn msg\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 120,
+        "wires": [
+            [
+                "0ed4e4502411fa2d"
+            ]
+        ]
+    },
+    {
+        "id": "0ed4e4502411fa2d",
+        "type": "debug",
+        "z": "a8c7f1756c353e23",
+        "g": "4cf36cd41dcb16dd",
+        "name": "debug 198",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1390,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "98ab3958922a6ffb",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "1",
+        "props": [
+            {
+                "p": "payload.loaction",
+                "v": "1",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 660,
+        "wires": [
+            [
+                "c8ec2e13eca5d251"
+            ]
+        ]
+    },
+    {
+        "id": "e423dc1117d08eae",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "2",
+        "props": [
+            {
+                "p": "payload.loaction",
+                "v": "2",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 700,
+        "wires": [
+            [
+                "c8ec2e13eca5d251"
+            ]
+        ]
+    },
+    {
+        "id": "fbee511c2e0b66a7",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "3",
+        "props": [
+            {
+                "p": "payload.loaction",
+                "v": "3",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 740,
+        "wires": [
+            [
+                "c8ec2e13eca5d251"
+            ]
+        ]
+    },
+    {
+        "id": "ba63d7e034f7a86b",
+        "type": "inject",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "4",
+        "props": [
+            {
+                "p": "payload.loaction",
+                "v": "4",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 780,
+        "wires": [
+            [
+                "c8ec2e13eca5d251"
+            ]
+        ]
+    },
+    {
+        "id": "68e5c7547035693e",
+        "type": "link in",
+        "z": "a8c7f1756c353e23",
+        "g": "9e16b088d31c281d",
+        "name": "Location",
+        "links": [
+            "f951951176374aa1"
+        ],
+        "x": 1085,
+        "y": 420,
+        "wires": [
+            [
+                "733730e71d55e06c"
+            ]
+        ]
+    },
+    {
+        "id": "cf74779c2bf061af",
+        "type": "comment",
+        "z": "a8c7f1756c353e23",
+        "g": "4cf36cd41dcb16dd",
+        "name": "Confirm Status",
+        "info": "",
+        "x": 1400,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "87a7bb47af5cfa33",
+        "type": "http request",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "nav_status",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.68.230/reeman/nav_status",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 330,
+        "y": 400,
+        "wires": [
+            [
+                "37b70cd51282a090"
+            ]
+        ]
+    },
+    {
+        "id": "bf99f368eab7ad90",
+        "type": "http request",
+        "z": "a8c7f1756c353e23",
+        "g": "5068ee36175c754e",
+        "name": "Speed",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.68.230/reeman/speed",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 310,
+        "y": 440,
+        "wires": [
+            [
+                "58e047794bc30d21"
+            ]
+        ]
+    },
+    {
+        "id": "c1c3781f460eacf7",
+        "type": "http request",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "nav_cmd",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.68.230/cmd/points_path",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 400,
+        "y": 600,
+        "wires": [
+            [
+                "61db4bc83bfdf2be"
+            ]
+        ]
+    },
+    {
+        "id": "36ca127612ec8115",
+        "type": "link out",
+        "z": "a8c7f1756c353e23",
+        "g": "b14e5d6c47be3121",
+        "name": "pick Up",
+        "mode": "link",
+        "links": [
+            "f51fa34df0729add",
+            "f85b6838fb3838ac"
+        ],
+        "x": 355,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "fb65b7796e62e274",
+        "type": "link in",
+        "z": "a8c7f1756c353e23",
+        "g": "4cf36cd41dcb16dd",
+        "name": "Basket Receive",
+        "links": [
+            "2f5aa24babc66708"
+        ],
+        "x": 965,
+        "y": 240,
+        "wires": [
+            [
+                "cd264ee59737163c"
+            ]
+        ]
+    },
+    {
+        "id": "0e9388b6db9ba5f9",
+        "type": "modbus-client",
+        "name": "MixRobot",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.1.50",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "1",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showErrors": false,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "d08bf79d38b53708",
+        "type": "mongodb4-client",
+        "name": "Mix Robot",
+        "protocol": "mongodb",
+        "hostname": "",
+        "port": "",
+        "dbName": "db_mixRobot",
+        "appName": "",
+        "authSource": "",
+        "authMechanism": "DEFAULT",
+        "tls": false,
+        "tlsCAFile": "",
+        "tlsCertificateKeyFile": "",
+        "tlsInsecure": false,
+        "connectTimeoutMS": "30000",
+        "socketTimeoutMS": "0",
+        "minPoolSize": "0",
+        "maxPoolSize": "100",
+        "maxIdleTimeMS": "0",
+        "uri": "mongodb://mongodb:27017/",
+        "advanced": "{}",
+        "uriTabActive": "tab-uri-advanced"
+    }
+]
