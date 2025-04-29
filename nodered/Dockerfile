@@ -18,5 +18,5 @@ COPY flows.json /data/flows.json
 COPY /uibuilder /tmp/uibuilder
 
 
-CMD ["cp -r /tmp/uibuilder /data"]
+RUN cp -r /tmp/uibuilder /data
 
