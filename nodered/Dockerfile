@@ -1,22 +1,21 @@
-FROM nodered/node-red
+FROM nodered/node-red:latest
 
-# Copy package.json to the WORKDIR so npm builds all
-# of your added nodes modules for Node-RED
 WORKDIR /data
-COPY package.json /data
-RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production
+
+USER root
+
+# Combine COPY and RUN commands to reduce layers
+COPY package.json flows_cred.json flows.json ./
+COPY /uibuilder ./uibuilder
+
+# Combine RUN commands and clean npm cache
+RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production \
+    && npm cache clean --force \
+    && mkdir -p uibuilder \
+    && chown -R node-red:node-red /data \
+    && chmod -R 755 /data
+
+# Switch back to non-root user for security
+USER node-red
+
 WORKDIR /usr/src/node-red
-
-# Copy _your_ Node-RED project files into place
-# NOTE: This will only work if you DO NOT later mount /data as an external volume.
-#       If you need to use an external volume for persistence then
-#       copy your settings and flows files to that volume instead.
-COPY flows_cred.json /data/flows_cred.json
-COPY flows.json /data/flows.json
-
-# เตรียมไฟล์แต่ยังไม่ใช้งาน
-COPY /uibuilder /tmp/uibuilder
-
-
-CMD ["cp -r /tmp/uibuilder /data"]
-
