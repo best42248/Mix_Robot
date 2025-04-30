@@ -158,6 +158,32 @@
         "x": 850,
         "y": 280,
         "wires": [
+            [
+                "526ac7d678046bb1"
+            ]
+        ]
+    },
+    {
+        "id": "526ac7d678046bb1",
+        "type": "modbus-write",
+        "z": "5e7797c88fcdaabc",
+        "name": "Product ID",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "1",
+        "dataType": "HoldingRegister",
+        "adr": "1",
+        "quantity": "1",
+        "server": "0e9388b6db9ba5f9",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1010,
+        "y": 280,
+        "wires": [
+            [],
             []
         ]
     },
