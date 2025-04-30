@@ -147,8 +147,8 @@
         "id": "e764c1df9824022d",
         "type": "function",
         "z": "5e7797c88fcdaabc",
-        "name": "function 10",
-        "func": "const robotDone = msg.payload[0]\nif(robotDone === 1){\n    global.set(\"robotPickup\", true);\n}\nelse{\n    global.set(\"robotPickup\", false);\n}\nreturn msg;",
+        "name": "Robot Done",
+        "func": "const robotDone = msg.payload[0]\nif(robotDone === 1){\n    msg.payload = 0\n    return msg;\n}\nelse if(robotDone === 10){\n    global.set(\"robotPickup\", true);\n}\nelse{\n    global.set(\"robotPickup\", false); \n}\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -2470,7 +2470,7 @@
         "g": "5068ee36175c754e",
         "name": "",
         "props": [],
-        "repeat": "",
+        "repeat": "1",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
@@ -2577,7 +2577,7 @@
         "z": "a8c7f1756c353e23",
         "g": "b14e5d6c47be3121",
         "name": "Control AMR",
-        "func": "let location = msg.payload.loaction\nlet basketReceived = flow.get(\"basketReceived\");\nlet robotPickup = global.get(\"robotPickup\");\nlet releaseProduct = flow.get(\"releaseProduct\");\nlet pickUp = global.get(\"pickUp\")\nlet dropOff = 0 || flow.get(\"dropOff\")\nif(location !== 0 ){\n    if(location == 1 && basketReceived){\n        if(dropOff !== 0){\n            msg.payload = { \"name\": \"pick1\" };\n            flow.set(\"basketReceived\", false);\n            global.set(\"pickUp\", false)\n            global.set(\"ProductType\",0);\n            return msg\n        }\n    }\n    else if (location == 2 ){\n        if (!pickUp){\n            global.set(\"pickUp\",true)\n            global.set(\"ProductType\",2);\n            return msg\n        }\n        else if (robotPickup){\n            msg.payload = { \"name\": \"pick2\" };\n            global.set(\"pickUp\", false)\n            return msg\n        }\n    }\n    else if (location == 3 ){\n        if (!pickUp){\n            global.set(\"pickUp\",true)\n            global.set(\"ProductType\",4);\n            return msg\n        }\n        else if (robotPickup){\n            switch (dropOff) {\n                case 1:\n                case 2:\n                case 3:\n                case 4:\n                case 5:\n                case 6:\n                case 7:\n                case 8:\n                case 9:\n                case 10:\n                    msg.payload = { \"name\": \"Dog\" + dropOff };\n                    global.set(\"pickUp\", false)\n                    return msg;\n                default:\n                    return null;\n            }\n        }\n \n    }\n    else if ((location == 4 || location == 5) && releaseProduct){\n            msg.payload = { \"name\": \"Basket\" };\n            flow.set(\"releaseProduct\", false);\n            global.set(\"pickUp\", false)\n            return msg;\n\n    }\n}\n",
+        "func": "let location = msg.payload.loaction\nlet basketReceived = flow.get(\"basketReceived\");\nlet robotPickup = global.get(\"robotPickup\");\nlet releaseProduct = flow.get(\"releaseProduct\");\nlet pickUp = global.get(\"pickUp\")\nlet dropOff = 0 || flow.get(\"dropOff\")\nif(location !== 0 ){\n    if(location == 1 && basketReceived){\n        if(dropOff !== 0){\n            msg.payload = { \"name\": \"pick1\" };\n            flow.set(\"basketReceived\", false);\n            global.set(\"pickUp\", false)\n            global.set(\"ProductType\",0);\n            msg.led = [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n            return msg\n        }\n    }\n    else if (location == 2 ){\n        if (!pickUp){\n            global.set(\"pickUp\",true)\n            global.set(\"ProductType\",2);\n            return msg\n        }\n        else if (robotPickup){\n            msg.payload = { \"name\": \"pick2\" };\n            global.set(\"pickUp\", false)\n            msg.led = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n            return msg\n        }\n    }\n    else if (location == 3 ){\n        if (!pickUp){\n            global.set(\"pickUp\",true)\n            global.set(\"ProductType\",4);\n            return msg\n        }\n        else if (robotPickup){\n            msg.led = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n            switch (dropOff) {\n                case 1:\n                case 2:\n                case 3:\n                case 4:\n                case 5:\n                case 6:\n                case 7:\n                case 8:\n                case 9:\n                case 10:\n                    msg.payload = { \"name\": \"Dog\" + dropOff };\n                    global.set(\"pickUp\", false)\n                    return msg;\n                default:\n                    return null;\n            }\n        }\n \n    }\n    else if ((location == 4 || location == 5) && releaseProduct){\n            msg.payload = { \"name\": \"Basket\" };\n            flow.set(\"releaseProduct\", false);\n            global.set(\"pickUp\", false)\n            return msg;\n\n    }\n}\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -3122,6 +3122,7 @@
         "name": "pick Up",
         "mode": "link",
         "links": [
+            "70b77493857c06e6",
             "f51fa34df0729add",
             "f85b6838fb3838ac"
         ],
@@ -3143,6 +3144,1665 @@
         "wires": [
             [
                 "cd264ee59737163c"
+            ]
+        ]
+    },
+    {
+        "id": "c7e94fa06f0409df",
+        "type": "tab",
+        "label": "AMR Bakery (Storage Management)",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f5bd3cf22a3d73d9",
+        "type": "group",
+        "z": "c7e94fa06f0409df",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "0eb41dcb318101e8",
+            "b958e8f61db521f7",
+            "056aa811b0e5a4bd",
+            "81f3f5e76be16517",
+            "39e9bb5044dde695",
+            "90e3275002eab905",
+            "e2707208df747e80",
+            "77682d9e31e51319",
+            "416927645a855514",
+            "f8de47e418bd8729",
+            "8153fbc10dfec28a",
+            "cb94895fec2a3d9c"
+        ],
+        "x": 134,
+        "y": 219,
+        "w": 1252,
+        "h": 142
+    },
+    {
+        "id": "59b45d8324ac2582",
+        "type": "group",
+        "z": "c7e94fa06f0409df",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "5fb33903e62689ab",
+            "963ffb4e597b1150",
+            "2790b802f2da9b14",
+            "47c3a43969c23fa2",
+            "447f212a36c90595",
+            "de62b30bc5a14b30",
+            "37e7398d96eb822b",
+            "2749a15455d53407",
+            "c1677c230c85f99b",
+            "98ab98335add503d",
+            "3c30b623ee23e814",
+            "296def69bd164d3e"
+        ],
+        "x": 134,
+        "y": 379,
+        "w": 1252,
+        "h": 142
+    },
+    {
+        "id": "0eb41dcb318101e8",
+        "type": "inject",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "Receive",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 260,
+        "wires": [
+            [
+                "b958e8f61db521f7"
+            ]
+        ]
+    },
+    {
+        "id": "b958e8f61db521f7",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "Buffer Queue Input",
+        "func": "msg.collection = \"BufferActiveQueue\"\nmsg.operation = \"find\"\nmsg.payload = { \n    name: \"Product A\", \n    method : \"Input\"\n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    timeStamp: 1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 260,
+        "wires": [
+            [
+                "056aa811b0e5a4bd"
+            ]
+        ]
+    },
+    {
+        "id": "81f3f5e76be16517",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "Storage_Management",
+        "func": "let data = msg.payload[0]\nmsg.collection = \"Storage_Management\"\nmsg.operation = \"find\"\nmsg.payload = { \n    name: data.name,\n    //Status : \"Empty\" \n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    timeStamp: 1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 260,
+        "wires": [
+            [
+                "39e9bb5044dde695"
+            ]
+        ]
+    },
+    {
+        "id": "90e3275002eab905",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "Find Location",
+        "func": "let storage = msg.payload\n// ตัวแปรเก็บ Location ที่พบล่าสุด\nlet lastEmptyLocation = null;\nlet locationProduct = 0;\n\n// ตรวจสอบว่ามี Product อยู่ใน storage หรือไม่\nfor (let i = 0; i < storage.length; i++) {\n    if (storage[i].Status === \"Product\") {\n        locationProduct = i;\n        break;\n    }\n}\nfor (let i = locationProduct; i < storage.length; i++) {\n    if (storage[i].Status === \"Empty\") {\n        lastEmptyLocation = storage[i].Location;\n        break;\n    }\n}\n\nflow.set(\"locationReceive\", lastEmptyLocation);\n// ส่งค่า Location ที่พบล่าสุดออกมา\nmsg.payload = lastEmptyLocation;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 260,
+        "wires": [
+            [
+                "77682d9e31e51319"
+            ]
+        ]
+    },
+    {
+        "id": "e2707208df747e80",
+        "type": "debug",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "debug 232",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "77682d9e31e51319",
+        "type": "debug",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "debug 233",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1270,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "416927645a855514",
+        "type": "inject",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "Finish Receive",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 320,
+        "wires": [
+            [
+                "f8de47e418bd8729"
+            ]
+        ]
+    },
+    {
+        "id": "f8de47e418bd8729",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "Location ",
+        "func": "let location = flow.get(\"locationReceive\");\nif (location){\n    msg.collection = \"Storage_Management\"\n    msg.operation = \"updateOne\";\n    const query = {\n        Location: location\n    };\n\n    // กำหนดการอัปเดต\n    const update = {\n        $set: {\n            timestamp: (new Date()).toISOString(),  // เรียกใช้งาน toISOString() อย่างถูกต้อง\n            Status: \"Product\"\n        }\n    };\n\n    // ตัวเลือกสำหรับการอัปเดต\n    const options = {\n        upsert: false\n    };\n\n    // ตั้งค่า payload ให้มีค่าเป็น array ของ query, update, และ options\n    msg.payload = [query, update, options];\n    flow.set(\"locationReceive\", null);\n    return msg;\n}\nreturn null",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 320,
+        "wires": [
+            [
+                "8153fbc10dfec28a"
+            ]
+        ]
+    },
+    {
+        "id": "38dc7798fa2f382e",
+        "type": "inject",
+        "z": "c7e94fa06f0409df",
+        "name": "Clear Data",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 120,
+        "wires": [
+            [
+                "2c0b555b365cd39d"
+            ]
+        ]
+    },
+    {
+        "id": "2c0b555b365cd39d",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "name": "Storage_Management",
+        "func": "msg.collection = \"Storage_Management\"\nmsg.operation = \"find\"\nmsg.payload = { \n    Status : \"Product\" \n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    timeStamp: 1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 120,
+        "wires": [
+            [
+                "63b254165b15a502"
+            ]
+        ]
+    },
+    {
+        "id": "b4a1372aea5ebdb5",
+        "type": "debug",
+        "z": "c7e94fa06f0409df",
+        "name": "debug 234",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "3a4f5151bfa7f23e",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "name": "Clear Product",
+        "func": "\nmsg.collection = \"Storage_Management\";\n\n\n\n\nlet items = msg.payload;\n\n// ตรวจสอบว่ามีข้อมูลหรือไม่\nif (items && items.length > 0) {\n\n    for (let i = 0; i < items.length; i++) {\n\n        msg.operation = \"updateOne\";\n        const query = { _id: items[i]._id };\n\n        // กำหนดการอัปเดต\n        const update = {\n            $set: {\n                Status: \"Empty\"\n\n            }\n        };\n\n        // ตัวเลือกสำหรับการอัปเดต\n        const options = {\n            upsert: false\n        };\n\n        // ตั้งค่า payload ให้มีค่าเป็น array ของ query, update, และ options\n        msg.payload = [query, update, options];\n        node.send(msg);\n    }\n} else {\n    // หากไม่มีข้อมูล\n    msg.payload = null;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 120,
+        "wires": [
+            [
+                "87c0a4dcc9ed2919"
+            ]
+        ]
+    },
+    {
+        "id": "cb94895fec2a3d9c",
+        "type": "comment",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "name": "Receive",
+        "info": "",
+        "x": 740,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "5fb33903e62689ab",
+        "type": "inject",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "Release",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 420,
+        "wires": [
+            [
+                "963ffb4e597b1150"
+            ]
+        ]
+    },
+    {
+        "id": "963ffb4e597b1150",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "Buffer Queue Output",
+        "func": "msg.collection = \"BufferActiveQueue\"\nmsg.operation = \"find\"\nmsg.payload = { \n    name: \"Product A\", \n    method : \"Output\"\n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    timeStamp: 1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 420,
+        "wires": [
+            [
+                "2790b802f2da9b14"
+            ]
+        ]
+    },
+    {
+        "id": "47c3a43969c23fa2",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "Storage_Management",
+        "func": "let data = msg.payload[0]\nmsg.collection = \"Storage_Management\"\nmsg.operation = \"find\"\nmsg.payload = { \n    name: data.name,\n    Status : \"Product\" \n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    timeStamp: 1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 420,
+        "wires": [
+            [
+                "447f212a36c90595"
+            ]
+        ]
+    },
+    {
+        "id": "de62b30bc5a14b30",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "Find Location",
+        "func": "let storage = msg.payload\n// ตัวแปรเก็บ Location ที่พบล่าสุด\nlet lastEmptyLocation = null;\n\n// วนลูปจากข้อมูลทั้งหมดเพื่อหา Status ที่เป็น Empty ล่าสุด\nfor (let i = 0; i <= storage.length; i++) {\n    if (storage[i].Status === \"Product\") {\n        lastEmptyLocation = storage[i].Location;\n        flow.set(\"locationRelease\", lastEmptyLocation)\n        break;\n    }\n}\n\n// ส่งค่า Location ที่พบล่าสุดออกมา\nmsg.payload = lastEmptyLocation;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 420,
+        "wires": [
+            [
+                "2749a15455d53407"
+            ]
+        ]
+    },
+    {
+        "id": "37e7398d96eb822b",
+        "type": "debug",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "debug 235",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "2749a15455d53407",
+        "type": "debug",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "debug 236",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1270,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c1677c230c85f99b",
+        "type": "inject",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "Finish Release",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 480,
+        "wires": [
+            [
+                "98ab98335add503d"
+            ]
+        ]
+    },
+    {
+        "id": "98ab98335add503d",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "Location ",
+        "func": "let location = flow.get(\"locationRelease\");\nif (location){\n    msg.collection = \"Storage_Management\"\n    msg.operation = \"updateOne\";\n    const query = {\n        Location: location\n    };\n\n    // กำหนดการอัปเดต\n    const update = {\n        $set: {\n            timestamp: (new Date()).toISOString(),  // เรียกใช้งาน toISOString() อย่างถูกต้อง\n            Status: \"Empty\"\n        }\n    };\n\n    // ตัวเลือกสำหรับการอัปเดต\n    const options = {\n        upsert: false\n    };\n\n    // ตั้งค่า payload ให้มีค่าเป็น array ของ query, update, และ options\n    msg.payload = [query, update, options];\n    flow.set(\"locationReceive\", null);\n    return msg;\n}\nreturn null",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 480,
+        "wires": [
+            [
+                "3c30b623ee23e814"
+            ]
+        ]
+    },
+    {
+        "id": "296def69bd164d3e",
+        "type": "comment",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "name": "Receive",
+        "info": "",
+        "x": 760,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "98609906b068deea",
+        "type": "inject",
+        "z": "c7e94fa06f0409df",
+        "name": "Rearange Line A",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 660,
+        "wires": [
+            [
+                "fdd128536ca35ab7"
+            ]
+        ]
+    },
+    {
+        "id": "12fd5077d4e1d1e5",
+        "type": "inject",
+        "z": "c7e94fa06f0409df",
+        "name": "Finish Receive",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 720,
+        "wires": [
+            [
+                "7f8debd9ae2a44cf"
+            ]
+        ]
+    },
+    {
+        "id": "7f8debd9ae2a44cf",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "name": "Location ",
+        "func": "let location = flow.get(\"locationReceive\");\nif (location){\n    msg.collection = \"Storage_Management\"\n    msg.operation = \"updateOne\";\n    const query = {\n        Location: location\n    };\n\n    // กำหนดการอัปเดต\n    const update = {\n        $set: {\n            timestamp: (new Date()).toISOString(),  // เรียกใช้งาน toISOString() อย่างถูกต้อง\n            Status: \"Product\"\n        }\n    };\n\n    // ตัวเลือกสำหรับการอัปเดต\n    const options = {\n        upsert: false\n    };\n\n    // ตั้งค่า payload ให้มีค่าเป็น array ของ query, update, และ options\n    msg.payload = [query, update, options];\n    flow.set(\"locationReceive\", null);\n    return msg;\n}\nreturn null",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 720,
+        "wires": [
+            [
+                "76de8c221ba56fa5"
+            ]
+        ]
+    },
+    {
+        "id": "9860df49d52d6745",
+        "type": "comment",
+        "z": "c7e94fa06f0409df",
+        "name": "Receive",
+        "info": "",
+        "x": 760,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "f11ee4c6f9f96582",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "name": "Find Location",
+        "func": "let storage = msg.payload;\n// ฟังก์ชันเพื่อ Rearrange ข้อมูลให้ Product อยู่ก่อน Empty\nlet rearrangedStorage = [];\n\n// ตัวแปรเพื่อเก็บตำแหน่งต้นทางและปลายทาง\nlet startLocation = null;\nlet endLocation = null;\n\nlet haveProduct = false;\n// วนลูปหาค่า \"Empty\" และ \"Product\" แยกจากกัน\nlet emptyItems = [];\nlet productItems = [];\n\nfor (let i = 0; i < storage.length; i++) {\n    if (storage[i].Status === \"Product\") {\n        haveProduct = true;\n        break;\n    }\n}\nif(haveProduct){\nfor (let i = 0; i < storage.length; i++) {\n    if (storage[i].Status === \"Empty\") {\n        emptyItems.push(storage[i]);  // เก็บรายการ Empty\n        if (endLocation === null) {\n            endLocation = storage[i].Location;  // ตำแหน่งแรกที่เจอ Product\n        }\n    } else if (storage[i].Status === \"Product\") {\n        productItems.push(storage[i]);  // เก็บรายการ Product\n        if (startLocation === null) {\n            startLocation = storage[i].Location;  // ตำแหน่งแรกที่เจอ Empty\n        }\n    }\n}\n\n// Rearrange ข้อมูล (Product อยู่ก่อน Empty)\nrearrangedStorage = productItems.concat(emptyItems);\n\n// ตั้งค่า storage ใหม่ที่ Rearrange แล้ว\nmsg.payload = {\n    soruce: startLocation,  // ตำแหน่งแรกที่เจอ Empty\n    destination: endLocation       // ตำแหน่งแรกที่เจอ Product\n};\n\n\n\nreturn msg;\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 660,
+        "wires": [
+            [
+                "c2c09c9eb0c62e1d"
+            ]
+        ]
+    },
+    {
+        "id": "c2c09c9eb0c62e1d",
+        "type": "debug",
+        "z": "c7e94fa06f0409df",
+        "name": "debug 238",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "f499ddd59ffea31d",
+        "type": "debug",
+        "z": "c7e94fa06f0409df",
+        "name": "debug 239",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "fdd128536ca35ab7",
+        "type": "function",
+        "z": "c7e94fa06f0409df",
+        "name": "Storage_Management",
+        "func": "\nmsg.collection = \"Storage_Management\"\nmsg.operation = \"find\"\nmsg.payload = { \n    name: \"Product A\",\n};\n\n// กำหนด projection สำหรับฟิลด์ที่ต้องการ\nmsg.projection = {\n    timeStamp: 1,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 660,
+        "wires": [
+            [
+                "d6acdf9161bf1f23"
+            ]
+        ]
+    },
+    {
+        "id": "056aa811b0e5a4bd",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 590,
+        "y": 260,
+        "wires": [
+            [
+                "81f3f5e76be16517"
+            ]
+        ]
+    },
+    {
+        "id": "39e9bb5044dde695",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 950,
+        "y": 260,
+        "wires": [
+            [
+                "90e3275002eab905",
+                "e2707208df747e80"
+            ]
+        ]
+    },
+    {
+        "id": "8153fbc10dfec28a",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "g": "f5bd3cf22a3d73d9",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 600,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "63b254165b15a502",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 570,
+        "y": 120,
+        "wires": [
+            [
+                "b4a1372aea5ebdb5",
+                "3a4f5151bfa7f23e"
+            ]
+        ]
+    },
+    {
+        "id": "87c0a4dcc9ed2919",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 880,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2790b802f2da9b14",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 590,
+        "y": 420,
+        "wires": [
+            [
+                "47c3a43969c23fa2"
+            ]
+        ]
+    },
+    {
+        "id": "447f212a36c90595",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 950,
+        "y": 420,
+        "wires": [
+            [
+                "de62b30bc5a14b30",
+                "37e7398d96eb822b"
+            ]
+        ]
+    },
+    {
+        "id": "3c30b623ee23e814",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "g": "59b45d8324ac2582",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 600,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "76de8c221ba56fa5",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "Update",
+        "x": 560,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d6acdf9161bf1f23",
+        "type": "mongodb4",
+        "z": "c7e94fa06f0409df",
+        "clientNode": "5991416c5339f6c9",
+        "mode": "collection",
+        "collection": "",
+        "operation": "",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "find",
+        "x": 610,
+        "y": 660,
+        "wires": [
+            [
+                "f11ee4c6f9f96582",
+                "f499ddd59ffea31d"
+            ]
+        ]
+    },
+    {
+        "id": "aceb1c399231f062",
+        "type": "tab",
+        "label": "Pick To LIght ",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d9ea27449d282e78",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "0",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[0,0,0,0,0]",
+        "payloadType": "json",
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "33efc55740630ff9"
+            ]
+        ]
+    },
+    {
+        "id": "83e4187bd802e5cf",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[1, 1, 1, 1, 1]",
+        "payloadType": "json",
+        "x": 150,
+        "y": 300,
+        "wires": [
+            [
+                "33efc55740630ff9"
+            ]
+        ]
+    },
+    {
+        "id": "c53550f16136e625",
+        "type": "function",
+        "z": "aceb1c399231f062",
+        "name": "Cal TowerLamp",
+        "func": "\nconst data = msg.led\n\n\nconst columns = 3;\n\n\nconst rows = [0,0,0,0,0];\nconst cols = [0,0,0];\n\n\ndata.forEach((value, index) => {\n    const row = Math.floor(index / columns) + 1; \n    const col = (index % columns) + 1; \n    if (value !== 0) {     \n        rows[row - 1] = 1; \n        cols[col - 1] = 1; \n    }\n});\n\n\nreturn [{ payload: data },{ payload: rows }, { payload: cols }];\n",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 460,
+        "wires": [
+            [
+                "8ba6c114bc2b9acb"
+            ],
+            [
+                "523acd87dc12356a"
+            ],
+            [
+                "a31ba94ce836316f"
+            ]
+        ]
+    },
+    {
+        "id": "281bb107a1a82086",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "4",
+        "props": [
+            {
+                "p": "led",
+                "v": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+                "vt": "json"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 730,
+        "y": 520,
+        "wires": [
+            [
+                "c53550f16136e625"
+            ]
+        ]
+    },
+    {
+        "id": "af74ed4e5552cbe7",
+        "type": "link out",
+        "z": "aceb1c399231f062",
+        "name": "Location",
+        "mode": "link",
+        "links": [
+            "63d3b7b84a1254cc",
+            "56ccbac941acba30",
+            "95af531cc4077fb6"
+        ],
+        "x": 1225,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "4ff7b86fbddce918",
+        "type": "link out",
+        "z": "aceb1c399231f062",
+        "name": "Rows",
+        "mode": "link",
+        "links": [
+            "78766368dd7546fc"
+        ],
+        "x": 1205,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "a31ba94ce836316f",
+        "type": "link out",
+        "z": "aceb1c399231f062",
+        "name": "coloumn",
+        "mode": "link",
+        "links": [
+            "f766424b88c51ec6"
+        ],
+        "x": 1035,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "63d3b7b84a1254cc",
+        "type": "link in",
+        "z": "aceb1c399231f062",
+        "name": "Location",
+        "links": [
+            "af74ed4e5552cbe7"
+        ],
+        "x": 185,
+        "y": 60,
+        "wires": [
+            [
+                "46e0696a2fa46e46"
+            ]
+        ]
+    },
+    {
+        "id": "78766368dd7546fc",
+        "type": "link in",
+        "z": "aceb1c399231f062",
+        "name": "Rows",
+        "links": [
+            "4ff7b86fbddce918"
+        ],
+        "x": 185,
+        "y": 380,
+        "wires": [
+            [
+                "33efc55740630ff9"
+            ]
+        ]
+    },
+    {
+        "id": "0a61158b54d03675",
+        "type": "modbus-flex-write",
+        "z": "aceb1c399231f062",
+        "name": "Lamp Status",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "server": "65d3a64d82edc16c",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 100,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "46e0696a2fa46e46",
+        "type": "function",
+        "z": "aceb1c399231f062",
+        "name": "sendLampState",
+        "func": "const lampStates = msg.payload; // ค่าหลอดไฟ (ตัวอย่าง: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1])\n\n// กำหนดเวลาหน่วง (ms) สำหรับแต่ละหลอดไฟ\nconst delayTime = 300;\n\n// ตัวแปรเก็บสถานะหลอดไฟก่อนหน้า\ncontext.previousLampStates = context.previousLampStates || []; // ค่าก่อนหน้า (เก็บใน context)\n\n// ฟังก์ชันเพื่อส่งข้อมูลหลอดไฟ\nfunction sendLampState(index) {\n    if (index < lampStates.length) {\n        // ตรวจสอบว่าค่าหลอดไฟเปลี่ยนแปลงหรือไม่\n        if (lampStates[index] !== context.previousLampStates[index]) {\n            // อัปเดตค่าหลอดไฟก่อนหน้า\n            context.previousLampStates[index] = lampStates[index];\n\n            // สร้างข้อความที่จะส่ง\n            let message = {\n                value: lampStates[index], // ค่าเปิดหรือปิด\n                fc: 6,\n                unitid: index + 1, // unit id ของการเชื่อมต่อ\n                address: 1, // address ของการเชื่อมต่อ\n                quantity: 1 // จำนวนที่ต้องการ\n            };\n\n            // ส่งข้อมูลไปยัง output\n            node.send({ payload: message });\n        }\n\n        // หน่วงเวลาและเรียกหลอดไฟดวงถัดไป\n        setTimeout(() => sendLampState(index + 1), delayTime);\n    }\n}\n\n// เริ่มส่งข้อมูลจากหลอดไฟดวงแรก\nsendLampState(0);\n\n// หยุดการส่งทันที (Function Node จะไม่ส่งข้อความซ้ำ)\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 100,
+        "wires": [
+            [
+                "0a61158b54d03675",
+                "903f7b8ffdc4d77a"
+            ]
+        ]
+    },
+    {
+        "id": "571beaf7d05233b3",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]",
+        "payloadType": "json",
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "46e0696a2fa46e46"
+            ]
+        ]
+    },
+    {
+        "id": "3fa9e4e52b035826",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "0",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+        "payloadType": "json",
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "46e0696a2fa46e46"
+            ]
+        ]
+    },
+    {
+        "id": "903f7b8ffdc4d77a",
+        "type": "debug",
+        "z": "aceb1c399231f062",
+        "name": "debug 190",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "6d8ba361a3a417d6",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "0",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[0,0,0]",
+        "payloadType": "json",
+        "x": 150,
+        "y": 220,
+        "wires": [
+            [
+                "05606f9db39d3454"
+            ]
+        ]
+    },
+    {
+        "id": "d3dd0c9dbde91eff",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[1, 1, 1]",
+        "payloadType": "json",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "05606f9db39d3454"
+            ]
+        ]
+    },
+    {
+        "id": "f766424b88c51ec6",
+        "type": "link in",
+        "z": "aceb1c399231f062",
+        "name": "coloumn",
+        "links": [
+            "a31ba94ce836316f"
+        ],
+        "x": 185,
+        "y": 260,
+        "wires": [
+            [
+                "05606f9db39d3454"
+            ]
+        ]
+    },
+    {
+        "id": "05606f9db39d3454",
+        "type": "function",
+        "z": "aceb1c399231f062",
+        "name": "sendLampState",
+        "func": "const lampStates = msg.payload; // ค่าหลอดไฟ (ตัวอย่าง: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1])\n\n// กำหนดเวลาหน่วง (ms) สำหรับแต่ละหลอดไฟ\nconst delayTime = 300; \n\n// ฟังก์ชันเพื่อส่งข้อมูลหลอดไฟ\nfunction sendLampState(index) {\n    if (index < lampStates.length) {\n        // สร้างข้อความที่จะส่ง\n        let message = {\n            value: lampStates[index], // ค่าเปิดหรือปิด\n            fc: 6, \n            unitid: index + 81, // unit id ของการเชื่อมต่อ\n            address: 2, // address ของการเชื่อมต่อ\n            quantity: 1 // จำนวนที่ต้องการ\n        };\n\n        // ส่งข้อมูลไปยัง output\n        node.send({payload:message}); // ส่งค่าหลอดไฟที่กำหนด\n\n        // เรียกใช้ setTimeout เพื่อหน่วงการส่งในดวงถัดไป\n        setTimeout(() => sendLampState(index + 1), delayTime);\n    }\n}\n\n// เริ่มส่งข้อมูลจากหลอดไฟดวงแรก\nsendLampState(0);\n\n// หยุดการส่งทันที (Function Node จะไม่ส่งข้อความซ้ำ)\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "bb9f7596f8a11764",
+                "f5cbd3d5f70f08cc"
+            ]
+        ]
+    },
+    {
+        "id": "bb9f7596f8a11764",
+        "type": "modbus-flex-write",
+        "z": "aceb1c399231f062",
+        "name": "Tower Lamp Col",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "server": "65d3a64d82edc16c",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 500,
+        "y": 200,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "33efc55740630ff9",
+        "type": "function",
+        "z": "aceb1c399231f062",
+        "name": "sendLampState",
+        "func": "const lampStates = msg.payload; // ค่าหลอดไฟ (ตัวอย่าง: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1])\n\n// กำหนดเวลาหน่วง (ms) สำหรับแต่ละหลอดไฟ\nconst delayTime = 300; \n\n// ฟังก์ชันเพื่อส่งข้อมูลหลอดไฟ\nfunction sendLampState(index) {\n    if (index < lampStates.length) {\n        // สร้างข้อความที่จะส่ง\n        let message = {\n            value: lampStates[index], // ค่าเปิดหรือปิด\n            fc: 6, \n            unitid: index + 84, // unit id ของการเชื่อมต่อ\n            address: 2, // address ของการเชื่อมต่อ\n            quantity: 1 // จำนวนที่ต้องการ\n        };\n\n        // ส่งข้อมูลไปยัง output\n        node.send({payload:message}); // ส่งค่าหลอดไฟที่กำหนด\n\n        // เรียกใช้ setTimeout เพื่อหน่วงการส่งในดวงถัดไป\n        setTimeout(() => sendLampState(index + 1), delayTime);\n    }\n}\n\n// เริ่มส่งข้อมูลจากหลอดไฟดวงแรก\nsendLampState(0);\n\n// หยุดการส่งทันที (Function Node จะไม่ส่งข้อความซ้ำ)\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 340,
+        "wires": [
+            [
+                "2c46a1b26d1e56dd",
+                "39bea6d3ce69d07d"
+            ]
+        ]
+    },
+    {
+        "id": "2c46a1b26d1e56dd",
+        "type": "modbus-flex-write",
+        "z": "aceb1c399231f062",
+        "name": "Tower Lamp Row",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "server": "65d3a64d82edc16c",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 510,
+        "y": 340,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "dd99bb6bea0ade63",
+        "type": "modbus-flex-write",
+        "z": "aceb1c399231f062",
+        "name": "Lamp Status",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "server": "65d3a64d82edc16c",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1190,
+        "y": 120,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a6fc10071ed42f4b",
+        "type": "function",
+        "z": "aceb1c399231f062",
+        "name": "sendButtonState",
+        "func": "const lampStates = msg.payload; // ค่าหลอดไฟ (ตัวอย่าง: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1])\n\n// กำหนดเวลาหน่วง (ms) สำหรับแต่ละหลอดไฟ\nconst delayTime = 100; \n\n// ฟังก์ชันเพื่อส่งข้อมูลหลอดไฟ\nfunction sendLampState(index) {\n    if (index < lampStates.length) {\n        // สร้างข้อความที่จะส่ง\n        let message = {\n            value: lampStates[index], // ค่าเปิดหรือปิด\n            fc: 6, \n            unitid: index + 1, // unit id ของการเชื่อมต่อ\n            address: 0, // address ของการเชื่อมต่อ\n            quantity: 1 // จำนวนที่ต้องการ\n        };\n\n        // ส่งข้อมูลไปยัง output\n        node.send({payload:message}); // ส่งค่าหลอดไฟที่กำหนด\n\n        // เรียกใช้ setTimeout เพื่อหน่วงการส่งในดวงถัดไป\n        setTimeout(() => sendLampState(index + 1), delayTime);\n    }\n}\n\n// เริ่มส่งข้อมูลจากหลอดไฟดวงแรก\nsendLampState(0);\n\n// หยุดการส่งทันที (Function Node จะไม่ส่งข้อความซ้ำ)\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 120,
+        "wires": [
+            [
+                "dd99bb6bea0ade63",
+                "fe73091a42a5b626"
+            ]
+        ]
+    },
+    {
+        "id": "628f9ab3398632fd",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]",
+        "payloadType": "json",
+        "x": 850,
+        "y": 120,
+        "wires": [
+            [
+                "a6fc10071ed42f4b"
+            ]
+        ]
+    },
+    {
+        "id": "2f384025525a7a0b",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "0",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+        "payloadType": "json",
+        "x": 850,
+        "y": 160,
+        "wires": [
+            [
+                "a6fc10071ed42f4b"
+            ]
+        ]
+    },
+    {
+        "id": "fe73091a42a5b626",
+        "type": "debug",
+        "z": "aceb1c399231f062",
+        "name": "debug 195",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "f5cbd3d5f70f08cc",
+        "type": "debug",
+        "z": "aceb1c399231f062",
+        "name": "debug 196",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "39bea6d3ce69d07d",
+        "type": "debug",
+        "z": "aceb1c399231f062",
+        "name": "debug 197",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "fe370cdb14a5d091",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "2",
+        "props": [
+            {
+                "p": "led",
+                "v": "[0,0,0,1,1,0,0,0,0,0,0,0,0,0,0]",
+                "vt": "json"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 730,
+        "y": 440,
+        "wires": [
+            [
+                "c53550f16136e625"
+            ]
+        ]
+    },
+    {
+        "id": "9f56a392ec11c867",
+        "type": "inject",
+        "z": "aceb1c399231f062",
+        "name": "3",
+        "props": [
+            {
+                "p": "led",
+                "v": "[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0]",
+                "vt": "json"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 730,
+        "y": 480,
+        "wires": [
+            [
+                "c53550f16136e625"
+            ]
+        ]
+    },
+    {
+        "id": "1beae2a8b989c2ac",
+        "type": "http request",
+        "z": "aceb1c399231f062",
+        "d": true,
+        "name": "Nav",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.68.207/cmd/points_path",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1070,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8ba6c114bc2b9acb",
+        "type": "delay",
+        "z": "aceb1c399231f062",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1100,
+        "y": 420,
+        "wires": [
+            [
+                "af74ed4e5552cbe7"
+            ]
+        ]
+    },
+    {
+        "id": "523acd87dc12356a",
+        "type": "delay",
+        "z": "aceb1c399231f062",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1080,
+        "y": 460,
+        "wires": [
+            [
+                "4ff7b86fbddce918"
+            ]
+        ]
+    },
+    {
+        "id": "70b77493857c06e6",
+        "type": "link in",
+        "z": "aceb1c399231f062",
+        "name": "LED PickToLight",
+        "links": [
+            "36ca127612ec8115"
+        ],
+        "x": 755,
+        "y": 560,
+        "wires": [
+            [
+                "c53550f16136e625"
             ]
         ]
     },
@@ -3196,8 +4856,62 @@
         "minPoolSize": "0",
         "maxPoolSize": "100",
         "maxIdleTimeMS": "0",
-        "uri": "mongodb://mongodb:27017/",
+        "uri": "mongodb://127.0.0.1/:27017/",
         "advanced": "{}",
         "uriTabActive": "tab-uri-advanced"
+    },
+    {
+        "id": "5991416c5339f6c9",
+        "type": "mongodb4-client",
+        "name": "",
+        "protocol": "mongodb",
+        "hostname": "",
+        "port": "",
+        "dbName": "db_AMR_Bakery",
+        "appName": "",
+        "authSource": "",
+        "authMechanism": "DEFAULT",
+        "tls": false,
+        "tlsCAFile": "",
+        "tlsCertificateKeyFile": "",
+        "tlsInsecure": false,
+        "connectTimeoutMS": "30000",
+        "socketTimeoutMS": "0",
+        "minPoolSize": "0",
+        "maxPoolSize": "100",
+        "maxIdleTimeMS": "0",
+        "uri": "mongodb://localhost:27017/",
+        "advanced": "{}",
+        "uriTabActive": "tab-uri-advanced"
+    },
+    {
+        "id": "65d3a64d82edc16c",
+        "type": "modbus-client",
+        "name": "",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.3.121",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "1",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showErrors": false,
+        "showWarnings": true,
+        "showLogs": true
     }
 ]
